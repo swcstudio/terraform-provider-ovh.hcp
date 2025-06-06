@@ -1,8 +1,6 @@
 module github.com/spectrumwebco/terraform-provider-hashicorp-ovh
 
-go 1.23.8
-
-toolchain go1.24.1
+go 1.18
 
 require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.25.0
