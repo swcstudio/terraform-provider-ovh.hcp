@@ -1,0 +1,18 @@
+apiVersion: v2
+name: hashicorp-ovh-provider
+description: A Helm chart for HashiCorp OVH Terraform Provider
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - terraform
+  - hashicorp
+  - ovh
+  - provider
+  - infrastructure
+home: https://github.com/spectrumwebco/terraform-provider-hashicorp-ovh
+sources:
+  - https://github.com/spectrumwebco/terraform-provider-hashicorp-ovh
+maintainers:
+  - name: Spectrum Web Co
+    email: support@spectrumweb.co

@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "label": "Build Provider",
+      "command": "make",
+      "args": ["build"],
+      "group": "build"
+    },
+    {
+      "label": "Test Provider",
+      "command": "make",
+      "args": ["test"],
+      "group": "test"
+    },
+    {
+      "label": "Install Provider",
+      "command": "make",
+      "args": ["install"],
+      "group": "build"
+    },
+    {
+      "label": "Generate Docs",
+      "command": "make",
+      "args": ["docs"],
+      "group": "build"
+    },
+    {
+      "label": "Format Code",
+      "command": "make",
+      "args": ["fmt"],
+      "group": "build"
+    },
+    {
+      "label": "Run Acceptance Tests",
+      "command": "make",
+      "args": ["testacc"],
+      "group": "test"
+    }
+  ]
+}

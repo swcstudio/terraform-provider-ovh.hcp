@@ -1,0 +1,97 @@
+replicaCount: 1
+
+image:
+  repository: spectrumwebco/terraform-provider-hashicorp-ovh
+  pullPolicy: IfNotPresent
+  tag: "0.1.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: terraform-provider.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+config:
+  ovh:
+    endpoint: "ovh-eu"
+    applicationKey: ""
+    applicationSecret: ""
+    consumerKey: ""
+  
+  hashicorp:
+    nomadAddress: "http://nomad:4646"
+    vaultAddress: "http://vault:8200"
+    consulAddress: "http://consul:8500"
+
+env:
+  - name: OVH_ENDPOINT
+    valueFrom:
+      secretKeyRef:
+        name: ovh-credentials
+        key: endpoint
+  - name: OVH_APPLICATION_KEY
+    valueFrom:
+      secretKeyRef:
+        name: ovh-credentials
+        key: application-key
+  - name: OVH_APPLICATION_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: ovh-credentials
+        key: application-secret
+  - name: OVH_CONSUMER_KEY
+    valueFrom:
+      secretKeyRef:
+        name: ovh-credentials
+        key: consumer-key
