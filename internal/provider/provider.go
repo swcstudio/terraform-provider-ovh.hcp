@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
