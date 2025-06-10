@@ -1,28 +1,33 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/spectrumwebco/terraform-provider-hashicorp-ovh/internal/provider"
 )
 
 var (
-	version = "dev"
-	commit  = ""
+	version string = "dev"
+	commit  string = ""
 )
 
 func main() {
-	var debugMode bool
+	var debug bool
 
-	flag.BoolVar(&debugMode, "debug", false, "set to true to run the provider with support for debuggers like delve")
+	flag.BoolVar(&debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
 	flag.Parse()
 
-	opts := &plugin.ServeOpts{
-		Debug:        debugMode,
-		ProviderAddr: "registry.terraform.io/spectrumwebco/hashicorp-ovh",
-		ProviderFunc: provider.New(version),
+	opts := providerserver.ServeOpts{
+		Address: "registry.terraform.io/spectrumwebco/hashicorp-ovh",
+		Debug:   debug,
 	}
 
-	plugin.Serve(opts)
+	err := providerserver.Serve(context.Background(), provider.New(version), opts)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
