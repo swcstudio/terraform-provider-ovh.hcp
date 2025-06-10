@@ -1,6 +1,6 @@
-# Terraform Provider for HashiCorp Stack on OVH
+# Terraform Provider for HashiCorp Stack on OVHcloud
 
-This Terraform provider enables management of HashiCorp infrastructure services on OVH cloud, providing enterprise-grade orchestration, security, and networking capabilities with European data sovereignty and cost optimization.
+This Terraform provider enables you to manage HashiCorp infrastructure services on OVHcloud, providing enterprise-grade orchestration, security, and networking capabilities with seamless integration between HashiCorp's cloud-native services and OVHcloud's robust infrastructure platform.
 
 ## Features
 
@@ -103,7 +103,7 @@ make install
 
 ## License
 
-Apache 2.0 License - see [LICENSE](LICENSE) for details.
+This project is licensed under the Mozilla Public License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
