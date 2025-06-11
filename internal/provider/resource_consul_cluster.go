@@ -153,21 +153,21 @@ func resourceConsulClusterCreate(ctx context.Context, d *schema.ResourceData, me
 	_ = diag.Diagnostics{}
 
 	clusterConfig := map[string]interface{}{
-		"name":               d.Get("name").(string),
-		"region":             d.Get("region").(string),
-		"serverCount":        d.Get("server_count").(int),
-		"clientCount":        d.Get("client_count").(int),
-		"instanceType":       d.Get("instance_type").(string),
-		"datacenter":         d.Get("datacenter").(string),
-		"connectEnabled":     d.Get("connect_enabled").(bool),
-		"aclEnabled":         d.Get("acl_enabled").(bool),
-		"encryptionEnabled":  d.Get("encryption_enabled").(bool),
-		"tlsEnabled":         d.Get("tls_enabled").(bool),
-		"uiEnabled":          d.Get("ui_enabled").(bool),
-		"monitoringEnabled":  d.Get("monitoring_enabled").(bool),
-		"backupEnabled":      d.Get("backup_enabled").(bool),
-		"web3Services":       d.Get("web3_services").(bool),
-		"tags":               d.Get("tags"),
+		"name":              d.Get("name").(string),
+		"region":            d.Get("region").(string),
+		"serverCount":       d.Get("server_count").(int),
+		"clientCount":       d.Get("client_count").(int),
+		"instanceType":      d.Get("instance_type").(string),
+		"datacenter":        d.Get("datacenter").(string),
+		"connectEnabled":    d.Get("connect_enabled").(bool),
+		"aclEnabled":        d.Get("acl_enabled").(bool),
+		"encryptionEnabled": d.Get("encryption_enabled").(bool),
+		"tlsEnabled":        d.Get("tls_enabled").(bool),
+		"uiEnabled":         d.Get("ui_enabled").(bool),
+		"monitoringEnabled": d.Get("monitoring_enabled").(bool),
+		"backupEnabled":     d.Get("backup_enabled").(bool),
+		"web3Services":      d.Get("web3_services").(bool),
+		"tags":              d.Get("tags"),
 	}
 
 	var result map[string]interface{}

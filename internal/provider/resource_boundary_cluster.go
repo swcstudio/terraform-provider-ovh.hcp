@@ -137,19 +137,19 @@ func resourceBoundaryClusterCreate(ctx context.Context, d *schema.ResourceData, 
 	_ = diag.Diagnostics{}
 
 	clusterConfig := map[string]interface{}{
-		"name":              d.Get("name").(string),
-		"region":            d.Get("region").(string),
-		"controllerCount":   d.Get("controller_count").(int),
-		"workerCount":       d.Get("worker_count").(int),
-		"instanceType":      d.Get("instance_type").(string),
-		"databaseType":      d.Get("database_type").(string),
-		"vaultIntegration":  d.Get("vault_integration").(bool),
-		"ldapAuth":          d.Get("ldap_auth").(bool),
-		"oidcAuth":          d.Get("oidc_auth").(bool),
-		"sessionRecording":  d.Get("session_recording").(bool),
-		"multiHopSessions":  d.Get("multi_hop_sessions").(bool),
-		"web3Targets":       d.Get("web3_targets").(bool),
-		"tags":              d.Get("tags"),
+		"name":             d.Get("name").(string),
+		"region":           d.Get("region").(string),
+		"controllerCount":  d.Get("controller_count").(int),
+		"workerCount":      d.Get("worker_count").(int),
+		"instanceType":     d.Get("instance_type").(string),
+		"databaseType":     d.Get("database_type").(string),
+		"vaultIntegration": d.Get("vault_integration").(bool),
+		"ldapAuth":         d.Get("ldap_auth").(bool),
+		"oidcAuth":         d.Get("oidc_auth").(bool),
+		"sessionRecording": d.Get("session_recording").(bool),
+		"multiHopSessions": d.Get("multi_hop_sessions").(bool),
+		"web3Targets":      d.Get("web3_targets").(bool),
+		"tags":             d.Get("tags"),
 	}
 
 	var result map[string]interface{}

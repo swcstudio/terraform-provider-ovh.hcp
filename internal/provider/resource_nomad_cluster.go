@@ -154,20 +154,20 @@ func resourceNomadClusterCreate(ctx context.Context, d *schema.ResourceData, met
 	datacenter := d.Get("datacenter").(string)
 
 	clusterConfig := map[string]interface{}{
-		"name":               clusterName,
-		"region":             region,
-		"serverCount":        serverCount,
-		"clientCount":        clientCount,
-		"instanceType":       instanceType,
-		"datacenter":         datacenter,
-		"vaultIntegration":   d.Get("vault_integration").(bool),
-		"consulIntegration":  d.Get("consul_integration").(bool),
-		"aclEnabled":         d.Get("acl_enabled").(bool),
-		"tlsEnabled":         d.Get("tls_enabled").(bool),
-		"web3Enabled":        d.Get("web3_enabled").(bool),
-		"kataContainers":     d.Get("kata_containers").(bool),
-		"gpuSupport":         d.Get("gpu_support").(bool),
-		"tags":               d.Get("tags"),
+		"name":              clusterName,
+		"region":            region,
+		"serverCount":       serverCount,
+		"clientCount":       clientCount,
+		"instanceType":      instanceType,
+		"datacenter":        datacenter,
+		"vaultIntegration":  d.Get("vault_integration").(bool),
+		"consulIntegration": d.Get("consul_integration").(bool),
+		"aclEnabled":        d.Get("acl_enabled").(bool),
+		"tlsEnabled":        d.Get("tls_enabled").(bool),
+		"web3Enabled":       d.Get("web3_enabled").(bool),
+		"kataContainers":    d.Get("kata_containers").(bool),
+		"gpuSupport":        d.Get("gpu_support").(bool),
+		"tags":              d.Get("tags"),
 	}
 
 	var result map[string]interface{}

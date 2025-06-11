@@ -170,11 +170,9 @@ func (p *HashiCorpOVHProvider) Configure(ctx context.Context, req provider.Confi
 }
 
 func (p *HashiCorpOVHProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-	}
+	return []func() resource.Resource{}
 }
 
 func (p *HashiCorpOVHProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-	}
+	return []func() datasource.DataSource{}
 }
