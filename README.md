@@ -91,70 +91,55 @@ Before deploying this provider to the Terraform Registry, ensure you have:
 - ✅ **GitHub Personal Access Token** with repo permissions
 - ✅ **Clean git state** (no uncommitted changes)
 
-### Quick Deploy
+### Automated CI/CD Deployment
 
-For maintainers, use the automated release script:
+This provider uses GitHub Actions for fully automated CI/CD:
 
-```bash
-# Set your GitHub token
-export GITHUB_TOKEN=your_github_token_here
+1. **Automated Testing:** Every pull request triggers comprehensive testing
+2. **Security Scanning:** Automated security and vulnerability scanning
+3. **Automated Releases:** Tagged commits automatically trigger releases
+4. **Registry Publishing:** Releases are automatically published to Terraform Registry
 
-# Create and publish a release
-./scripts/release.sh v0.1.0
-```
+### Creating a Release
 
-### Manual Deployment Steps
-
-1. **Prepare the release:**
+1. **Create and push a tag:**
    ```bash
    git checkout main
    git pull origin main
-   make test
-   ```
-
-2. **Create and push a tag:**
-   ```bash
    git tag v0.1.0
    git push origin v0.1.0
    ```
 
-3. **Build and publish:**
-   ```bash
-   export GPG_TTY=$(tty)
-   export GPG_FINGERPRINT=your_gpg_fingerprint
-   export GITHUB_TOKEN=your_github_token
-   goreleaser release --clean
-   ```
+2. **GitHub Actions will automatically:**
+   - Run all tests and security scans
+   - Build multi-platform binaries
+   - Sign releases with GPG
+   - Create GitHub release
+   - Publish to Terraform Registry
 
-4. **Register with Terraform Registry:**
-   - Go to [registry.terraform.io](https://registry.terraform.io)
-   - Sign in with GitHub
-   - Click "Publish" → "Provider"
-   - Select `swcstudio/terraform-provider-hashicorp-ovh`
-   - Add your GPG public key
+### Manual Release (Emergency Only)
+
+For emergency releases when CI/CD is unavailable:
+
+```bash
+make release
+```
+
+**Prerequisites:** Set `GITHUB_TOKEN` and `GPG_FINGERPRINT` environment variables.
 
 ## Development
 
 ### Quick Start Development
 
-Run the automated development setup:
-
-```bash
-./scripts/dev-setup.sh
-```
-
-This will install all dependencies and configure your development environment.
-
-### Manual Development Setup
+Set up your development environment:
 
 ```bash
 # Clone the repository
 git clone https://github.com/swcstudio/terraform-provider-hashicorp-ovh.git
 cd terraform-provider-hashicorp-ovh
 
-# Install dependencies
-go mod download
-go mod tidy
+# Set up development environment
+make setup
 
 # Build the provider
 make build
@@ -168,6 +153,11 @@ make testacc
 # Install locally for testing
 make install
 ```
+
+The `make setup` command will automatically:
+- Install all required development tools
+- Download and verify dependencies
+- Configure the development environment
 
 ### Development Workflow
 
@@ -202,27 +192,33 @@ make install
 ### Available Make Targets
 
 ```bash
-make help     # Show all available targets
-make build    # Build the provider binary
-make install  # Install provider locally
-make test     # Run unit tests
-make testacc  # Run acceptance tests
-make docs     # Generate documentation
-make lint     # Run linter
-make fmt      # Format code
-make clean    # Clean build artifacts
+make help              # Show all available targets
+make setup             # Set up development environment
+make build             # Build the provider binary
+make build-all         # Build for all platforms
+make install           # Install provider locally
+make test              # Run unit tests
+make test-coverage     # Run tests with coverage
+make testacc           # Run acceptance tests
+make lint              # Run golangci-lint
+make fmt               # Format code
+make security          # Run security checks
+make docs              # Generate documentation
+make validate          # Run all validation checks
+make ci                # Run full CI pipeline locally
+make clean             # Clean build artifacts
 ```
 
-### Development Shortcuts
+### Enterprise-Grade Quality Checks
 
-Use the development helper script for common tasks:
+This provider includes comprehensive quality assurance:
 
 ```bash
-./dev.sh build    # Build provider
-./dev.sh test     # Run tests
-./dev.sh install  # Install locally
-./dev.sh docs     # Generate docs
-./dev.sh release v0.1.0  # Create release
+make validate          # Run all checks (formatting, linting, tests, security)
+make security          # Security scanning (gosec, vulnerability check)
+make test-coverage     # Test coverage with threshold checking
+make complexity        # Cyclomatic complexity analysis
+make ci                # Full CI pipeline simulation
 ```
 
 ### Contributing
@@ -245,9 +241,10 @@ Use the development helper script for common tasks:
 │   ├── main.tf           # Basic example
 │   └── local-dev/        # Local development setup
 ├── docs/                 # Auto-generated documentation
-├── scripts/              # Development and release scripts
-│   ├── dev-setup.sh      # Development environment setup
-│   └── release.sh        # Automated release script
+├── .github/
+│   └── workflows/        # GitHub Actions CI/CD workflows
+│       ├── ci.yml        # Main CI/CD pipeline
+│       └── security.yml  # Security scanning workflow
 ├── charts/               # Helm charts for deployment
 └── .goreleaser.yml       # Release configuration
 ```
@@ -273,16 +270,28 @@ export HCP_CLIENT_SECRET="your-hcp-client-secret"
 make testacc
 ```
 
-#### Local Testing
+#### Integration Testing
 ```bash
-# Install provider locally
-make install
+# Run integration tests with examples
+make test-integration
 
-# Test with example configuration
-cd examples/local-dev
-terraform init
-terraform plan
-terraform apply
+# Validate all example configurations
+make example-validate
+
+# Plan example configurations
+make example-plan
+```
+
+#### Security Testing
+```bash
+# Run comprehensive security scans
+make security
+
+# Run vulnerability checks
+make security-vuln
+
+# Run static security analysis
+make security-gosec
 ```
 
 ## Requirements
