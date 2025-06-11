@@ -10,9 +10,9 @@ keywords:
   - ovh
   - provider
   - infrastructure
-home: https://github.com/spectrumwebco/terraform-provider-hashicorp-ovh
+home: https://github.com/swcstudio/terraform-provider-hashicorp-ovh
 sources:
-  - https://github.com/spectrumwebco/terraform-provider-hashicorp-ovh
+  - https://github.com/swcstudio/terraform-provider-hashicorp-ovh
 maintainers:
   - name: Spectrum Web Co
     email: support@spectrumweb.co

@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     hashicorp-ovh = {
-      source  = "spectrumwebco/hashicorp-ovh"
+      source  = "swcstudio/hashicorp-ovh"
       version = "~> 0.1.0"
     }
   }

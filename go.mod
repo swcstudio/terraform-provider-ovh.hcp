@@ -1,4 +1,4 @@
-module github.com/spectrumwebco/terraform-provider-hashicorp-ovh
+module github.com/swcstudio/terraform-provider-hashicorp-ovh
 
 go 1.23.0
 

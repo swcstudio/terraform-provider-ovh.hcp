@@ -13,8 +13,8 @@ build:
 # Install provider locally
 .PHONY: install
 install: build
-	mkdir -p ~/.terraform.d/plugins/registry.terraform.io/spectrumwebco/hashicorp-ovh/0.1.0/linux_amd64
-	mv terraform-provider-hashicorp-ovh ~/.terraform.d/plugins/registry.terraform.io/spectrumwebco/hashicorp-ovh/0.1.0/linux_amd64
+	mkdir -p ~/.terraform.d/plugins/registry.terraform.io/swcstudio/hashicorp-ovh/0.1.0/linux_amd64
+	mv terraform-provider-hashicorp-ovh ~/.terraform.d/plugins/registry.terraform.io/swcstudio/hashicorp-ovh/0.1.0/linux_amd64
 
 # Generate documentation
 .PHONY: docs

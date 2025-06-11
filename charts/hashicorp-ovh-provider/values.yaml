@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: spectrumwebco/terraform-provider-hashicorp-ovh
+  repository: swcstudio/terraform-provider-hashicorp-ovh
   pullPolicy: IfNotPresent
   tag: "0.1.0"
 
