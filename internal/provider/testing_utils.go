@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
@@ -17,20 +16,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
-// TestAccProvider is the provider instance used for acceptance tests
-var TestAccProvider *hashicorpOVHProvider
-
 // TestAccProviderFactories contains the provider factory for acceptance tests
-var TestAccProviderFactories map[string]func() (*schema.Provider, error)
+var TestAccProviderFactories map[string]func() (interface{}, error)
 
 // Common test configuration constants
 const (
-	TestResourcePrefix    = "tf-acc-test"
-	TestTagKey           = "terraform-test"
-	TestTagValue         = "true"
-	DefaultTestTimeout   = 30 * time.Minute
-	DefaultTestRegion    = "eu-west-1"
-	DefaultTestZone      = "eu-west-1a"
+	TestResourcePrefix = "tf-acc-test"
+	TestTagKey         = "terraform-test"
+	TestTagValue       = "true"
+	DefaultTestTimeout = 30 * time.Minute
+	DefaultTestRegion  = "eu-west-1"
+	DefaultTestZone    = "eu-west-1a"
 )
 
 // Test environment variables
@@ -228,7 +224,7 @@ func TestAccCheckResourceTags(resourceName string, expectedTags map[string]strin
 // MockHTTPServer creates a mock HTTP server for testing
 type MockHTTPServer struct {
 	*httptest.Server
-	Requests []*http.Request
+	Requests  []*http.Request
 	Responses []MockResponse
 }
 
@@ -294,8 +290,10 @@ func (m *MockHTTPServer) GetLastRequest() *http.Request {
 	return m.Requests[len(m.Requests)-1]
 }
 
-// TestProvider creates a test provider configuration
-func TestProvider() string {
+
+
+// TestProviderConfig generates a provider configuration for testing
+func TestProviderConfig() string {
 	return `
 provider "hashicorp-ovh" {
   ovh_endpoint           = "` + TestOVHEndpoint + `"
@@ -304,11 +302,6 @@ provider "hashicorp-ovh" {
   ovh_consumer_key       = "` + TestOVHConsumerKey + `"
   ovh_project_id         = "` + TestOVHProjectID + `"
 }`
-}
-
-// TestProviderConfig generates a provider configuration for testing
-func TestProviderConfig() string {
-	return TestProvider()
 }
 
 // TestNomadClusterConfig generates a basic Nomad cluster configuration
@@ -326,7 +319,7 @@ resource "hashicorp_ovh_nomad_cluster" "test" {
     %s = "%s"
     Environment = "test"
   }
-}`, TestProvider(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
 }
 
 // TestVaultClusterConfig generates a basic Vault cluster configuration
@@ -346,7 +339,7 @@ resource "hashicorp_ovh_vault_cluster" "test" {
     %s = "%s"
     Environment = "test"
   }
-}`, TestProvider(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
 }
 
 // TestConsulClusterConfig generates a basic Consul cluster configuration
@@ -366,7 +359,7 @@ resource "hashicorp_ovh_consul_cluster" "test" {
     %s = "%s"
     Environment = "test"
   }
-}`, TestProvider(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
 }
 
 // TestBoundaryClusterConfig generates a basic Boundary cluster configuration
@@ -384,7 +377,7 @@ resource "hashicorp_ovh_boundary_cluster" "test" {
     %s = "%s"
     Environment = "test"
   }
-}`, TestProvider(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
 }
 
 // TestWaypointRunnerConfig generates a basic Waypoint runner configuration
@@ -402,7 +395,7 @@ resource "hashicorp_ovh_waypoint_runner" "test" {
     %s = "%s"
     Environment = "test"
   }
-}`, TestProvider(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
 }
 
 // TestPackerTemplateConfig generates a basic Packer template configuration
@@ -421,7 +414,7 @@ resource "hashicorp_ovh_packer_template" "test" {
     %s = "%s"
     Environment = "test"
   }
-}`, TestProvider(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
 }
 
 // TestDataSourceConfig generates configurations for data source testing
@@ -430,7 +423,7 @@ func TestDataSourceNomadClustersConfig() string {
 %s
 
 data "hashicorp_ovh_nomad_clusters" "test" {}
-`, TestProvider())
+`, TestProviderConfig())
 }
 
 func TestDataSourceVaultClustersConfig() string {
@@ -438,7 +431,7 @@ func TestDataSourceVaultClustersConfig() string {
 %s
 
 data "hashicorp_ovh_vault_clusters" "test" {}
-`, TestProvider())
+`, TestProviderConfig())
 }
 
 func TestDataSourceConsulClustersConfig() string {
@@ -446,7 +439,7 @@ func TestDataSourceConsulClustersConfig() string {
 %s
 
 data "hashicorp_ovh_consul_clusters" "test" {}
-`, TestProvider())
+`, TestProviderConfig())
 }
 
 // ValidationHelper provides common validation functions

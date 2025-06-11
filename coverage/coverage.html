@@ -1,0 +1,3184 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>provider: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/data_source_boundary_clusters.go (0.0%)</option>
+				
+				<option value="file1">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/data_source_consul_clusters.go (0.0%)</option>
+				
+				<option value="file2">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/data_source_nomad_clusters.go (0.0%)</option>
+				
+				<option value="file3">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/data_source_vault_clusters.go (0.0%)</option>
+				
+				<option value="file4">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/provider.go (14.6%)</option>
+				
+				<option value="file5">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/resource_boundary_cluster.go (0.0%)</option>
+				
+				<option value="file6">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/resource_consul_cluster.go (0.0%)</option>
+				
+				<option value="file7">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/resource_nomad_cluster.go (0.0%)</option>
+				
+				<option value="file8">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/resource_packer_template.go (0.0%)</option>
+				
+				<option value="file9">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/resource_vault_cluster.go (0.0%)</option>
+				
+				<option value="file10">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/resource_waypoint_runner.go (0.0%)</option>
+				
+				<option value="file11">github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider/testing_utils.go (0.0%)</option>
+				
+				<option value="file12">github.com/swcstudio/terraform-provider-hashicorp-ovh/main.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+        "strconv"
+        "time"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func dataSourceBoundaryClusters() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Retrieves information about Boundary clusters on OVH infrastructure",
+
+                ReadContext: dataSourceBoundaryClustersRead,
+
+                Schema: map[string]*schema.Schema{
+                        "region": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by OVH region",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by status",
+                        },
+                        "clusters": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "List of Boundary clusters",
+                                Elem: &amp;schema.Resource{
+                                        Schema: map[string]*schema.Schema{
+                                                "id": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster ID",
+                                                },
+                                                "name": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster name",
+                                                },
+                                                "region": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "OVH region",
+                                                },
+                                                "controller_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of controller nodes",
+                                                },
+                                                "worker_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of worker nodes",
+                                                },
+                                                "instance_type": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Instance type",
+                                                },
+                                                "vault_integration": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "Vault integration enabled",
+                                                },
+                                                "controller_endpoints": {
+                                                        Type:        schema.TypeList,
+                                                        Computed:    true,
+                                                        Description: "Controller endpoints",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                                "ui_url": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "UI URL",
+                                                },
+                                                "status": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster status",
+                                                },
+                                                "tags": {
+                                                        Type:        schema.TypeMap,
+                                                        Computed:    true,
+                                                        Description: "Cluster tags",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                        },
+                                },
+                        },
+                },
+        }
+}</span>
+
+func dataSourceBoundaryClustersRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        var diags diag.Diagnostics
+
+        var clusters []map[string]interface{}
+        err := config.OVHClient.Get("/cloud/project/boundary/cluster", &amp;clusters)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to read Boundary clusters: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">region := d.Get("region").(string)
+        status := d.Get("status").(string)
+
+        var filteredClusters []map[string]interface{}
+        for _, cluster := range clusters </span><span class="cov0" title="0">{
+                if region != "" &amp;&amp; cluster["region"].(string) != region </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">if status != "" &amp;&amp; cluster["status"].(string) != status </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">filteredClusters = append(filteredClusters, cluster)</span>
+        }
+
+        <span class="cov0" title="0">clusterList := make([]interface{}, len(filteredClusters))
+        for i, cluster := range filteredClusters </span><span class="cov0" title="0">{
+                clusterMap := map[string]interface{}{
+                        "id":                   cluster["id"],
+                        "name":                 cluster["name"],
+                        "region":               cluster["region"],
+                        "controller_count":     cluster["controllerCount"],
+                        "worker_count":         cluster["workerCount"],
+                        "instance_type":        cluster["instanceType"],
+                        "vault_integration":    cluster["vaultIntegration"],
+                        "controller_endpoints": cluster["controllerEndpoints"],
+                        "ui_url":               cluster["uiUrl"],
+                        "status":               cluster["status"],
+                }
+
+                if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                        clusterMap["tags"] = tags
+                }</span>
+
+                <span class="cov0" title="0">clusterList[i] = clusterMap</span>
+        }
+
+        <span class="cov0" title="0">d.Set("clusters", clusterList)
+        d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
+        return diags</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+        "strconv"
+        "time"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func dataSourceConsulClusters() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Retrieves information about Consul clusters on OVH infrastructure",
+
+                ReadContext: dataSourceConsulClustersRead,
+
+                Schema: map[string]*schema.Schema{
+                        "region": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by OVH region",
+                        },
+                        "datacenter": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by datacenter",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by status",
+                        },
+                        "clusters": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "List of Consul clusters",
+                                Elem: &amp;schema.Resource{
+                                        Schema: map[string]*schema.Schema{
+                                                "id": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster ID",
+                                                },
+                                                "name": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster name",
+                                                },
+                                                "region": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "OVH region",
+                                                },
+                                                "server_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of server nodes",
+                                                },
+                                                "client_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of client nodes",
+                                                },
+                                                "instance_type": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Instance type",
+                                                },
+                                                "datacenter": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Datacenter name",
+                                                },
+                                                "connect_enabled": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "Connect service mesh enabled",
+                                                },
+                                                "acl_enabled": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "ACL system enabled",
+                                                },
+                                                "server_endpoints": {
+                                                        Type:        schema.TypeList,
+                                                        Computed:    true,
+                                                        Description: "Server endpoints",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                                "ui_url": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "UI URL",
+                                                },
+                                                "status": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster status",
+                                                },
+                                                "tags": {
+                                                        Type:        schema.TypeMap,
+                                                        Computed:    true,
+                                                        Description: "Cluster tags",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                        },
+                                },
+                        },
+                },
+        }
+}</span>
+
+func dataSourceConsulClustersRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        var diags diag.Diagnostics
+
+        var clusters []map[string]interface{}
+        err := config.OVHClient.Get("/cloud/project/consul/cluster", &amp;clusters)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to read Consul clusters: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">region := d.Get("region").(string)
+        datacenter := d.Get("datacenter").(string)
+        status := d.Get("status").(string)
+
+        var filteredClusters []map[string]interface{}
+        for _, cluster := range clusters </span><span class="cov0" title="0">{
+                if region != "" &amp;&amp; cluster["region"].(string) != region </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">if datacenter != "" &amp;&amp; cluster["datacenter"].(string) != datacenter </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">if status != "" &amp;&amp; cluster["status"].(string) != status </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">filteredClusters = append(filteredClusters, cluster)</span>
+        }
+
+        <span class="cov0" title="0">clusterList := make([]interface{}, len(filteredClusters))
+        for i, cluster := range filteredClusters </span><span class="cov0" title="0">{
+                clusterMap := map[string]interface{}{
+                        "id":               cluster["id"],
+                        "name":             cluster["name"],
+                        "region":           cluster["region"],
+                        "server_count":     cluster["serverCount"],
+                        "client_count":     cluster["clientCount"],
+                        "instance_type":    cluster["instanceType"],
+                        "datacenter":       cluster["datacenter"],
+                        "connect_enabled":  cluster["connectEnabled"],
+                        "acl_enabled":      cluster["aclEnabled"],
+                        "server_endpoints": cluster["serverEndpoints"],
+                        "ui_url":           cluster["uiUrl"],
+                        "status":           cluster["status"],
+                }
+
+                if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                        clusterMap["tags"] = tags
+                }</span>
+
+                <span class="cov0" title="0">clusterList[i] = clusterMap</span>
+        }
+
+        <span class="cov0" title="0">d.Set("clusters", clusterList)
+        d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
+        return diags</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+        "strconv"
+        "time"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func dataSourceNomadClusters() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Retrieves information about Nomad clusters on OVH infrastructure",
+
+                ReadContext: dataSourceNomadClustersRead,
+
+                Schema: map[string]*schema.Schema{
+                        "region": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by OVH region",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by status",
+                        },
+                        "clusters": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "List of Nomad clusters",
+                                Elem: &amp;schema.Resource{
+                                        Schema: map[string]*schema.Schema{
+                                                "id": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster ID",
+                                                },
+                                                "name": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster name",
+                                                },
+                                                "region": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "OVH region",
+                                                },
+                                                "server_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of server nodes",
+                                                },
+                                                "client_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of client nodes",
+                                                },
+                                                "instance_type": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Instance type",
+                                                },
+                                                "datacenter": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Datacenter name",
+                                                },
+                                                "vault_integration": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "Vault integration enabled",
+                                                },
+                                                "consul_integration": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "Consul integration enabled",
+                                                },
+                                                "server_endpoints": {
+                                                        Type:        schema.TypeList,
+                                                        Computed:    true,
+                                                        Description: "Server endpoints",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                                "ui_url": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "UI URL",
+                                                },
+                                                "status": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster status",
+                                                },
+                                                "created_at": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Creation timestamp",
+                                                },
+                                                "tags": {
+                                                        Type:        schema.TypeMap,
+                                                        Computed:    true,
+                                                        Description: "Cluster tags",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                        },
+                                },
+                        },
+                },
+        }
+}</span>
+
+func dataSourceNomadClustersRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        var diags diag.Diagnostics
+
+        var clusters []map[string]interface{}
+        err := config.OVHClient.Get("/cloud/project/nomad/cluster", &amp;clusters)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to read Nomad clusters: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">region := d.Get("region").(string)
+        status := d.Get("status").(string)
+
+        var filteredClusters []map[string]interface{}
+        for _, cluster := range clusters </span><span class="cov0" title="0">{
+                if region != "" &amp;&amp; cluster["region"].(string) != region </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">if status != "" &amp;&amp; cluster["status"].(string) != status </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">filteredClusters = append(filteredClusters, cluster)</span>
+        }
+
+        <span class="cov0" title="0">clusterList := make([]interface{}, len(filteredClusters))
+        for i, cluster := range filteredClusters </span><span class="cov0" title="0">{
+                clusterMap := map[string]interface{}{
+                        "id":                 cluster["id"],
+                        "name":               cluster["name"],
+                        "region":             cluster["region"],
+                        "server_count":       cluster["serverCount"],
+                        "client_count":       cluster["clientCount"],
+                        "instance_type":      cluster["instanceType"],
+                        "datacenter":         cluster["datacenter"],
+                        "vault_integration":  cluster["vaultIntegration"],
+                        "consul_integration": cluster["consulIntegration"],
+                        "server_endpoints":   cluster["serverEndpoints"],
+                        "ui_url":             cluster["uiUrl"],
+                        "status":             cluster["status"],
+                        "created_at":         cluster["createdAt"],
+                }
+
+                if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                        clusterMap["tags"] = tags
+                }</span>
+
+                <span class="cov0" title="0">clusterList[i] = clusterMap</span>
+        }
+
+        <span class="cov0" title="0">d.Set("clusters", clusterList)
+        d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
+        return diags</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+        "strconv"
+        "time"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+)
+
+func dataSourceVaultClusters() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Retrieves information about Vault clusters on OVH infrastructure",
+
+                ReadContext: dataSourceVaultClustersRead,
+
+                Schema: map[string]*schema.Schema{
+                        "region": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by OVH region",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Description: "Filter clusters by status",
+                        },
+                        "clusters": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "List of Vault clusters",
+                                Elem: &amp;schema.Resource{
+                                        Schema: map[string]*schema.Schema{
+                                                "id": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster ID",
+                                                },
+                                                "name": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster name",
+                                                },
+                                                "region": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "OVH region",
+                                                },
+                                                "node_count": {
+                                                        Type:        schema.TypeInt,
+                                                        Computed:    true,
+                                                        Description: "Number of nodes",
+                                                },
+                                                "instance_type": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Instance type",
+                                                },
+                                                "storage_type": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Storage backend type",
+                                                },
+                                                "auto_unseal": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "Auto-unseal enabled",
+                                                },
+                                                "audit_enabled": {
+                                                        Type:        schema.TypeBool,
+                                                        Computed:    true,
+                                                        Description: "Audit logging enabled",
+                                                },
+                                                "cluster_url": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster URL",
+                                                },
+                                                "ui_url": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "UI URL",
+                                                },
+                                                "status": {
+                                                        Type:        schema.TypeString,
+                                                        Computed:    true,
+                                                        Description: "Cluster status",
+                                                },
+                                                "tags": {
+                                                        Type:        schema.TypeMap,
+                                                        Computed:    true,
+                                                        Description: "Cluster tags",
+                                                        Elem: &amp;schema.Schema{
+                                                                Type: schema.TypeString,
+                                                        },
+                                                },
+                                        },
+                                },
+                        },
+                },
+        }
+}</span>
+
+func dataSourceVaultClustersRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        var diags diag.Diagnostics
+
+        var clusters []map[string]interface{}
+        err := config.OVHClient.Get("/cloud/project/vault/cluster", &amp;clusters)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to read Vault clusters: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">region := d.Get("region").(string)
+        status := d.Get("status").(string)
+
+        var filteredClusters []map[string]interface{}
+        for _, cluster := range clusters </span><span class="cov0" title="0">{
+                if region != "" &amp;&amp; cluster["region"].(string) != region </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">if status != "" &amp;&amp; cluster["status"].(string) != status </span><span class="cov0" title="0">{
+                        continue</span>
+                }
+                <span class="cov0" title="0">filteredClusters = append(filteredClusters, cluster)</span>
+        }
+
+        <span class="cov0" title="0">clusterList := make([]interface{}, len(filteredClusters))
+        for i, cluster := range filteredClusters </span><span class="cov0" title="0">{
+                clusterMap := map[string]interface{}{
+                        "id":            cluster["id"],
+                        "name":          cluster["name"],
+                        "region":        cluster["region"],
+                        "node_count":    cluster["nodeCount"],
+                        "instance_type": cluster["instanceType"],
+                        "storage_type":  cluster["storageType"],
+                        "auto_unseal":   cluster["autoUnseal"],
+                        "audit_enabled": cluster["auditEnabled"],
+                        "cluster_url":   cluster["clusterUrl"],
+                        "ui_url":        cluster["uiUrl"],
+                        "status":        cluster["status"],
+                }
+
+                if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                        clusterMap["tags"] = tags
+                }</span>
+
+                <span class="cov0" title="0">clusterList[i] = clusterMap</span>
+        }
+
+        <span class="cov0" title="0">d.Set("clusters", clusterList)
+        d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
+        return diags</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package provider
+
+import (
+        "context"
+        "os"
+
+        "github.com/hashicorp/terraform-plugin-framework/datasource"
+        "github.com/hashicorp/terraform-plugin-framework/provider"
+        "github.com/hashicorp/terraform-plugin-framework/provider/schema"
+        "github.com/hashicorp/terraform-plugin-framework/resource"
+        "github.com/hashicorp/terraform-plugin-framework/types"
+        "github.com/hashicorp/terraform-plugin-log/tflog"
+        "github.com/ovh/go-ovh/ovh"
+)
+
+type HashiCorpOVHProvider struct {
+        version string
+}
+
+type HashiCorpOVHProviderModel struct {
+        OVHEndpoint          types.String `tfsdk:"ovh_endpoint"`
+        OVHApplicationKey    types.String `tfsdk:"ovh_application_key"`
+        OVHApplicationSecret types.String `tfsdk:"ovh_application_secret"`
+        OVHConsumerKey       types.String `tfsdk:"ovh_consumer_key"`
+}
+
+type Config struct {
+        OVHClient *ovh.Client
+}
+
+func New(version string) func() provider.Provider <span class="cov9" title="14">{
+        return func() provider.Provider </span><span class="cov9" title="14">{
+                return &amp;HashiCorpOVHProvider{
+                        version: version,
+                }
+        }</span>
+}
+
+func (p *HashiCorpOVHProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) <span class="cov10" title="15">{
+        resp.TypeName = "hashicorp-ovh"
+        resp.Version = p.version
+}</span>
+
+func (p *HashiCorpOVHProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) <span class="cov1" title="1">{
+        resp.Schema = schema.Schema{
+                Attributes: map[string]schema.Attribute{
+                        "ovh_endpoint": schema.StringAttribute{
+                                Description: "OVH API endpoint (ovh-eu, ovh-us, ovh-ca, kimsufi-eu, kimsufi-ca, soyoustart-eu, soyoustart-ca, runabove-ca)",
+                                Required:    true,
+                        },
+                        "ovh_application_key": schema.StringAttribute{
+                                Description: "OVH API application key",
+                                Required:    true,
+                        },
+                        "ovh_application_secret": schema.StringAttribute{
+                                Description: "OVH API application secret",
+                                Required:    true,
+                                Sensitive:   true,
+                        },
+                        "ovh_consumer_key": schema.StringAttribute{
+                                Description: "OVH API consumer key",
+                                Required:    true,
+                                Sensitive:   true,
+                        },
+                },
+        }
+}</span>
+
+func (p *HashiCorpOVHProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) <span class="cov0" title="0">{
+        tflog.Info(ctx, "Configuring HashiCorp OVH provider")
+
+        var config HashiCorpOVHProviderModel
+        diags := req.Config.Get(ctx, &amp;config)
+        resp.Diagnostics.Append(diags...)
+        if resp.Diagnostics.HasError() </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">ovhEndpoint := os.Getenv("OVH_ENDPOINT")
+        if !config.OVHEndpoint.IsNull() </span><span class="cov0" title="0">{
+                ovhEndpoint = config.OVHEndpoint.ValueString()
+        }</span>
+
+        <span class="cov0" title="0">ovhApplicationKey := os.Getenv("OVH_APPLICATION_KEY")
+        if !config.OVHApplicationKey.IsNull() </span><span class="cov0" title="0">{
+                ovhApplicationKey = config.OVHApplicationKey.ValueString()
+        }</span>
+
+        <span class="cov0" title="0">ovhApplicationSecret := os.Getenv("OVH_APPLICATION_SECRET")
+        if !config.OVHApplicationSecret.IsNull() </span><span class="cov0" title="0">{
+                ovhApplicationSecret = config.OVHApplicationSecret.ValueString()
+        }</span>
+
+        <span class="cov0" title="0">ovhConsumerKey := os.Getenv("OVH_CONSUMER_KEY")
+        if !config.OVHConsumerKey.IsNull() </span><span class="cov0" title="0">{
+                ovhConsumerKey = config.OVHConsumerKey.ValueString()
+        }</span>
+
+        <span class="cov0" title="0">if ovhEndpoint == "" </span><span class="cov0" title="0">{
+                resp.Diagnostics.AddError(
+                        "Missing OVH Endpoint Configuration",
+                        "While configuring the provider, the OVH endpoint was not found in "+
+                                "the OVH_ENDPOINT environment variable or provider "+
+                                "configuration block ovh_endpoint attribute.",
+                )
+        }</span>
+
+        <span class="cov0" title="0">if ovhApplicationKey == "" </span><span class="cov0" title="0">{
+                resp.Diagnostics.AddError(
+                        "Missing OVH Application Key Configuration",
+                        "While configuring the provider, the OVH application key was not found in "+
+                                "the OVH_APPLICATION_KEY environment variable or provider "+
+                                "configuration block ovh_application_key attribute.",
+                )
+        }</span>
+
+        <span class="cov0" title="0">if ovhApplicationSecret == "" </span><span class="cov0" title="0">{
+                resp.Diagnostics.AddError(
+                        "Missing OVH Application Secret Configuration",
+                        "While configuring the provider, the OVH application secret was not found in "+
+                                "the OVH_APPLICATION_SECRET environment variable or provider "+
+                                "configuration block ovh_application_secret attribute.",
+                )
+        }</span>
+
+        <span class="cov0" title="0">if ovhConsumerKey == "" </span><span class="cov0" title="0">{
+                resp.Diagnostics.AddError(
+                        "Missing OVH Consumer Key Configuration",
+                        "While configuring the provider, the OVH consumer key was not found in "+
+                                "the OVH_CONSUMER_KEY environment variable or provider "+
+                                "configuration block ovh_consumer_key attribute.",
+                )
+        }</span>
+
+        <span class="cov0" title="0">if resp.Diagnostics.HasError() </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx = tflog.SetField(ctx, "ovh_endpoint", ovhEndpoint)
+        ctx = tflog.SetField(ctx, "ovh_application_key", ovhApplicationKey)
+        ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "ovh_application_secret")
+        ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "ovh_consumer_key")
+
+        tflog.Debug(ctx, "Creating OVH client")
+
+        ovhClient, err := ovh.NewClient(
+                ovhEndpoint,
+                ovhApplicationKey,
+                ovhApplicationSecret,
+                ovhConsumerKey,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                resp.Diagnostics.AddError(
+                        "Unable to Create OVH API Client",
+                        "An unexpected error occurred when creating the OVH API client. "+
+                                "If the error is not clear, please contact the provider developers.\n\n"+
+                                "OVH Client Error: "+err.Error(),
+                )
+                return
+        }</span>
+
+        <span class="cov0" title="0">providerConfig := &amp;Config{
+                OVHClient: ovhClient,
+        }
+
+        resp.DataSourceData = providerConfig
+        resp.ResourceData = providerConfig
+
+        tflog.Info(ctx, "Configured HashiCorp OVH provider", map[string]any{"success": true})</span>
+}
+
+func (p *HashiCorpOVHProvider) Resources(ctx context.Context) []func() resource.Resource <span class="cov1" title="1">{
+        return []func() resource.Resource{}
+}</span>
+
+func (p *HashiCorpOVHProvider) DataSources(ctx context.Context) []func() datasource.DataSource <span class="cov1" title="1">{
+        return []func() datasource.DataSource{}
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func resourceBoundaryCluster() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Manages a Boundary cluster on OVH infrastructure for secure access management",
+
+                CreateContext: resourceBoundaryClusterCreate,
+                ReadContext:   resourceBoundaryClusterRead,
+                UpdateContext: resourceBoundaryClusterUpdate,
+                DeleteContext: resourceBoundaryClusterDelete,
+
+                Importer: &amp;schema.ResourceImporter{
+                        StateContext: schema.ImportStatePassthroughContext,
+                },
+
+                Schema: map[string]*schema.Schema{
+                        "name": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "Name of the Boundary cluster",
+                        },
+                        "region": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "OVH region for the cluster",
+                        },
+                        "controller_count": {
+                                Type:         schema.TypeInt,
+                                Required:     true,
+                                Description:  "Number of Boundary controller nodes",
+                                ValidateFunc: validation.IntBetween(1, 5),
+                        },
+                        "worker_count": {
+                                Type:         schema.TypeInt,
+                                Required:     true,
+                                Description:  "Number of Boundary worker nodes",
+                                ValidateFunc: validation.IntBetween(1, 20),
+                        },
+                        "instance_type": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "OVH instance type for Boundary nodes",
+                        },
+                        "database_type": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Default:     "postgresql",
+                                Description: "Database backend type",
+                                ValidateFunc: validation.StringInSlice([]string{
+                                        "postgresql", "mysql",
+                                }, false),
+                        },
+                        "vault_integration": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Vault integration for credential brokering",
+                        },
+                        "ldap_auth": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable LDAP authentication",
+                        },
+                        "oidc_auth": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable OIDC authentication",
+                        },
+                        "session_recording": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable session recording",
+                        },
+                        "multi_hop_sessions": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable multi-hop sessions",
+                        },
+                        "web3_targets": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Web3 target management",
+                        },
+                        "tags": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Tags to apply to cluster resources",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "controller_endpoints": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "Boundary controller endpoints",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "ui_url": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Boundary UI URL",
+                        },
+                        "auth_method_id": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Default auth method ID",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Cluster status",
+                        },
+                },
+        }
+}</span>
+
+func resourceBoundaryClusterCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterConfig := map[string]interface{}{
+                "name":             d.Get("name").(string),
+                "region":           d.Get("region").(string),
+                "controllerCount":  d.Get("controller_count").(int),
+                "workerCount":      d.Get("worker_count").(int),
+                "instanceType":     d.Get("instance_type").(string),
+                "databaseType":     d.Get("database_type").(string),
+                "vaultIntegration": d.Get("vault_integration").(bool),
+                "ldapAuth":         d.Get("ldap_auth").(bool),
+                "oidcAuth":         d.Get("oidc_auth").(bool),
+                "sessionRecording": d.Get("session_recording").(bool),
+                "multiHopSessions": d.Get("multi_hop_sessions").(bool),
+                "web3Targets":      d.Get("web3_targets").(bool),
+                "tags":             d.Get("tags"),
+        }
+
+        var result map[string]interface{}
+        err := config.OVHClient.Post("/cloud/project/boundary/cluster", clusterConfig, &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to create Boundary cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">clusterId := result["id"].(string)
+        d.SetId(clusterId)
+
+        return resourceBoundaryClusterRead(ctx, d, meta)</span>
+}
+
+func resourceBoundaryClusterRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        var cluster map[string]interface{}
+        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/boundary/cluster/%s", clusterId), &amp;cluster)
+        if err != nil </span><span class="cov0" title="0">{
+                d.SetId("")
+                return diag.FromErr(fmt.Errorf("failed to read Boundary cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.Set("name", cluster["name"])
+        d.Set("region", cluster["region"])
+        d.Set("controller_count", cluster["controllerCount"])
+        d.Set("worker_count", cluster["workerCount"])
+        d.Set("instance_type", cluster["instanceType"])
+        d.Set("database_type", cluster["databaseType"])
+        d.Set("vault_integration", cluster["vaultIntegration"])
+        d.Set("ldap_auth", cluster["ldapAuth"])
+        d.Set("oidc_auth", cluster["oidcAuth"])
+        d.Set("session_recording", cluster["sessionRecording"])
+        d.Set("multi_hop_sessions", cluster["multiHopSessions"])
+        d.Set("web3_targets", cluster["web3Targets"])
+        d.Set("controller_endpoints", cluster["controllerEndpoints"])
+        d.Set("ui_url", cluster["uiUrl"])
+        d.Set("auth_method_id", cluster["authMethodId"])
+        d.Set("status", cluster["status"])
+
+        if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("tags", tags)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func resourceBoundaryClusterUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        if d.HasChanges("controller_count", "worker_count", "tags") </span><span class="cov0" title="0">{
+                updateConfig := map[string]interface{}{}
+
+                if d.HasChange("controller_count") </span><span class="cov0" title="0">{
+                        updateConfig["controllerCount"] = d.Get("controller_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("worker_count") </span><span class="cov0" title="0">{
+                        updateConfig["workerCount"] = d.Get("worker_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("tags") </span><span class="cov0" title="0">{
+                        updateConfig["tags"] = d.Get("tags")
+                }</span>
+
+                <span class="cov0" title="0">err := config.OVHClient.Put(fmt.Sprintf("/cloud/project/boundary/cluster/%s", clusterId), updateConfig, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("failed to update Boundary cluster: %w", err))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return resourceBoundaryClusterRead(ctx, d, meta)</span>
+}
+
+func resourceBoundaryClusterDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        err := config.OVHClient.Delete(fmt.Sprintf("/cloud/project/boundary/cluster/%s", clusterId), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to delete Boundary cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.SetId("")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func resourceConsulCluster() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Manages a Consul cluster on OVH infrastructure with service mesh capabilities",
+
+                CreateContext: resourceConsulClusterCreate,
+                ReadContext:   resourceConsulClusterRead,
+                UpdateContext: resourceConsulClusterUpdate,
+                DeleteContext: resourceConsulClusterDelete,
+
+                Importer: &amp;schema.ResourceImporter{
+                        StateContext: schema.ImportStatePassthroughContext,
+                },
+
+                Schema: map[string]*schema.Schema{
+                        "name": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "Name of the Consul cluster",
+                        },
+                        "region": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "OVH region for the cluster",
+                        },
+                        "server_count": {
+                                Type:         schema.TypeInt,
+                                Required:     true,
+                                Description:  "Number of Consul server nodes",
+                                ValidateFunc: validation.IntBetween(1, 7),
+                        },
+                        "client_count": {
+                                Type:         schema.TypeInt,
+                                Optional:     true,
+                                Default:      3,
+                                Description:  "Number of Consul client nodes",
+                                ValidateFunc: validation.IntBetween(0, 100),
+                        },
+                        "instance_type": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "OVH instance type for Consul nodes",
+                        },
+                        "datacenter": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "Consul datacenter name",
+                        },
+                        "connect_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Consul Connect service mesh",
+                        },
+                        "acl_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Consul ACL system",
+                        },
+                        "encryption_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable gossip encryption",
+                        },
+                        "tls_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable TLS encryption",
+                        },
+                        "ui_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Consul UI",
+                        },
+                        "monitoring_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable monitoring and metrics",
+                        },
+                        "backup_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable automated backups",
+                        },
+                        "web3_services": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Web3 service discovery",
+                        },
+                        "tags": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Tags to apply to cluster resources",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "server_endpoints": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "Consul server endpoints",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "ui_url": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Consul UI URL",
+                        },
+                        "gossip_key": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Sensitive:   true,
+                                Description: "Gossip encryption key",
+                        },
+                        "master_token": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Sensitive:   true,
+                                Description: "ACL master token",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Cluster status",
+                        },
+                },
+        }
+}</span>
+
+func resourceConsulClusterCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterConfig := map[string]interface{}{
+                "name":              d.Get("name").(string),
+                "region":            d.Get("region").(string),
+                "serverCount":       d.Get("server_count").(int),
+                "clientCount":       d.Get("client_count").(int),
+                "instanceType":      d.Get("instance_type").(string),
+                "datacenter":        d.Get("datacenter").(string),
+                "connectEnabled":    d.Get("connect_enabled").(bool),
+                "aclEnabled":        d.Get("acl_enabled").(bool),
+                "encryptionEnabled": d.Get("encryption_enabled").(bool),
+                "tlsEnabled":        d.Get("tls_enabled").(bool),
+                "uiEnabled":         d.Get("ui_enabled").(bool),
+                "monitoringEnabled": d.Get("monitoring_enabled").(bool),
+                "backupEnabled":     d.Get("backup_enabled").(bool),
+                "web3Services":      d.Get("web3_services").(bool),
+                "tags":              d.Get("tags"),
+        }
+
+        var result map[string]interface{}
+        err := config.OVHClient.Post("/cloud/project/consul/cluster", clusterConfig, &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to create Consul cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">clusterId := result["id"].(string)
+        d.SetId(clusterId)
+
+        return resourceConsulClusterRead(ctx, d, meta)</span>
+}
+
+func resourceConsulClusterRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        var cluster map[string]interface{}
+        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/consul/cluster/%s", clusterId), &amp;cluster)
+        if err != nil </span><span class="cov0" title="0">{
+                d.SetId("")
+                return diag.FromErr(fmt.Errorf("failed to read Consul cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.Set("name", cluster["name"])
+        d.Set("region", cluster["region"])
+        d.Set("server_count", cluster["serverCount"])
+        d.Set("client_count", cluster["clientCount"])
+        d.Set("instance_type", cluster["instanceType"])
+        d.Set("datacenter", cluster["datacenter"])
+        d.Set("connect_enabled", cluster["connectEnabled"])
+        d.Set("acl_enabled", cluster["aclEnabled"])
+        d.Set("encryption_enabled", cluster["encryptionEnabled"])
+        d.Set("tls_enabled", cluster["tlsEnabled"])
+        d.Set("ui_enabled", cluster["uiEnabled"])
+        d.Set("monitoring_enabled", cluster["monitoringEnabled"])
+        d.Set("backup_enabled", cluster["backupEnabled"])
+        d.Set("web3_services", cluster["web3Services"])
+        d.Set("server_endpoints", cluster["serverEndpoints"])
+        d.Set("ui_url", cluster["uiUrl"])
+        d.Set("status", cluster["status"])
+
+        if gossipKey, ok := cluster["gossipKey"].(string); ok </span><span class="cov0" title="0">{
+                d.Set("gossip_key", gossipKey)
+        }</span>
+
+        <span class="cov0" title="0">if masterToken, ok := cluster["masterToken"].(string); ok </span><span class="cov0" title="0">{
+                d.Set("master_token", masterToken)
+        }</span>
+
+        <span class="cov0" title="0">if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("tags", tags)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func resourceConsulClusterUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        if d.HasChanges("server_count", "client_count", "tags") </span><span class="cov0" title="0">{
+                updateConfig := map[string]interface{}{}
+
+                if d.HasChange("server_count") </span><span class="cov0" title="0">{
+                        updateConfig["serverCount"] = d.Get("server_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("client_count") </span><span class="cov0" title="0">{
+                        updateConfig["clientCount"] = d.Get("client_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("tags") </span><span class="cov0" title="0">{
+                        updateConfig["tags"] = d.Get("tags")
+                }</span>
+
+                <span class="cov0" title="0">err := config.OVHClient.Put(fmt.Sprintf("/cloud/project/consul/cluster/%s", clusterId), updateConfig, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("failed to update Consul cluster: %w", err))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return resourceConsulClusterRead(ctx, d, meta)</span>
+}
+
+func resourceConsulClusterDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        err := config.OVHClient.Delete(fmt.Sprintf("/cloud/project/consul/cluster/%s", clusterId), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to delete Consul cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.SetId("")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+        "time"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func resourceNomadCluster() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Manages a Nomad cluster on OVH infrastructure with enterprise features",
+
+                CreateContext: resourceNomadClusterCreate,
+                ReadContext:   resourceNomadClusterRead,
+                UpdateContext: resourceNomadClusterUpdate,
+                DeleteContext: resourceNomadClusterDelete,
+
+                Importer: &amp;schema.ResourceImporter{
+                        StateContext: schema.ImportStatePassthroughContext,
+                },
+
+                Schema: map[string]*schema.Schema{
+                        "name": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "Name of the Nomad cluster",
+                        },
+                        "region": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "OVH region for the cluster",
+                                ValidateFunc: validation.StringInSlice([]string{
+                                        "GRA", "SBG", "RBX", "BHS", "WAW", "DE", "UK", "SGP", "SYD", "US-EAST", "US-WEST",
+                                }, false),
+                        },
+                        "server_count": {
+                                Type:         schema.TypeInt,
+                                Required:     true,
+                                Description:  "Number of Nomad server nodes",
+                                ValidateFunc: validation.IntBetween(1, 5),
+                        },
+                        "client_count": {
+                                Type:         schema.TypeInt,
+                                Required:     true,
+                                Description:  "Number of Nomad client nodes",
+                                ValidateFunc: validation.IntBetween(0, 100),
+                        },
+                        "instance_type": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "OVH instance type for cluster nodes",
+                                ValidateFunc: validation.StringInSlice([]string{
+                                        "s1-2", "s1-4", "s1-8", "c2-7", "c2-15", "c2-30", "c2-60", "c2-120",
+                                        "r2-15", "r2-30", "r2-60", "r2-120", "t1-45", "t1-90", "t1-180",
+                                }, false),
+                        },
+                        "datacenter": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "Nomad datacenter name",
+                        },
+                        "vault_integration": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Vault integration for secrets management",
+                        },
+                        "consul_integration": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Consul integration for service discovery",
+                        },
+                        "acl_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Nomad ACL system",
+                        },
+                        "tls_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable TLS encryption",
+                        },
+                        "web3_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Web3 blockchain integration",
+                        },
+                        "kata_containers": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Kata containers for secure workloads",
+                        },
+                        "gpu_support": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable GPU support for ML workloads",
+                        },
+                        "tags": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Tags to apply to cluster resources",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "server_endpoints": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Description: "Nomad server endpoints",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "ui_url": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Nomad UI URL",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Cluster status",
+                        },
+                        "created_at": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Cluster creation timestamp",
+                        },
+                },
+        }
+}</span>
+
+func resourceNomadClusterCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterName := d.Get("name").(string)
+        region := d.Get("region").(string)
+        serverCount := d.Get("server_count").(int)
+        clientCount := d.Get("client_count").(int)
+        instanceType := d.Get("instance_type").(string)
+        datacenter := d.Get("datacenter").(string)
+
+        clusterConfig := map[string]interface{}{
+                "name":              clusterName,
+                "region":            region,
+                "serverCount":       serverCount,
+                "clientCount":       clientCount,
+                "instanceType":      instanceType,
+                "datacenter":        datacenter,
+                "vaultIntegration":  d.Get("vault_integration").(bool),
+                "consulIntegration": d.Get("consul_integration").(bool),
+                "aclEnabled":        d.Get("acl_enabled").(bool),
+                "tlsEnabled":        d.Get("tls_enabled").(bool),
+                "web3Enabled":       d.Get("web3_enabled").(bool),
+                "kataContainers":    d.Get("kata_containers").(bool),
+                "gpuSupport":        d.Get("gpu_support").(bool),
+                "tags":              d.Get("tags"),
+        }
+
+        var result map[string]interface{}
+        err := config.OVHClient.Post("/cloud/project/nomad/cluster", clusterConfig, &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to create Nomad cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">clusterId := result["id"].(string)
+        d.SetId(clusterId)
+
+        if err := waitForClusterReady(ctx, config, clusterId); err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("cluster creation timeout: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">return resourceNomadClusterRead(ctx, d, meta)</span>
+}
+
+func resourceNomadClusterRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        var cluster map[string]interface{}
+        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/nomad/cluster/%s", clusterId), &amp;cluster)
+        if err != nil </span><span class="cov0" title="0">{
+                d.SetId("")
+                return diag.FromErr(fmt.Errorf("failed to read Nomad cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.Set("name", cluster["name"])
+        d.Set("region", cluster["region"])
+        d.Set("server_count", cluster["serverCount"])
+        d.Set("client_count", cluster["clientCount"])
+        d.Set("instance_type", cluster["instanceType"])
+        d.Set("datacenter", cluster["datacenter"])
+        d.Set("vault_integration", cluster["vaultIntegration"])
+        d.Set("consul_integration", cluster["consulIntegration"])
+        d.Set("acl_enabled", cluster["aclEnabled"])
+        d.Set("tls_enabled", cluster["tlsEnabled"])
+        d.Set("web3_enabled", cluster["web3Enabled"])
+        d.Set("kata_containers", cluster["kataContainers"])
+        d.Set("gpu_support", cluster["gpuSupport"])
+        d.Set("server_endpoints", cluster["serverEndpoints"])
+        d.Set("ui_url", cluster["uiUrl"])
+        d.Set("status", cluster["status"])
+        d.Set("created_at", cluster["createdAt"])
+
+        if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("tags", tags)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func resourceNomadClusterUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        if d.HasChanges("server_count", "client_count", "tags") </span><span class="cov0" title="0">{
+                updateConfig := map[string]interface{}{}
+
+                if d.HasChange("server_count") </span><span class="cov0" title="0">{
+                        updateConfig["serverCount"] = d.Get("server_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("client_count") </span><span class="cov0" title="0">{
+                        updateConfig["clientCount"] = d.Get("client_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("tags") </span><span class="cov0" title="0">{
+                        updateConfig["tags"] = d.Get("tags")
+                }</span>
+
+                <span class="cov0" title="0">err := config.OVHClient.Put(fmt.Sprintf("/cloud/project/nomad/cluster/%s", clusterId), updateConfig, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("failed to update Nomad cluster: %w", err))
+                }</span>
+
+                <span class="cov0" title="0">if err := waitForClusterReady(ctx, config, clusterId); err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("cluster update timeout: %w", err))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return resourceNomadClusterRead(ctx, d, meta)</span>
+}
+
+func resourceNomadClusterDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        err := config.OVHClient.Delete(fmt.Sprintf("/cloud/project/nomad/cluster/%s", clusterId), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to delete Nomad cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.SetId("")
+        return nil</span>
+}
+
+func waitForClusterReady(ctx context.Context, config *Config, clusterId string) error <span class="cov0" title="0">{
+        timeout := time.After(30 * time.Minute)
+        ticker := time.NewTicker(30 * time.Second)
+        defer ticker.Stop()
+
+        for </span><span class="cov0" title="0">{
+                select </span>{
+                case &lt;-timeout:<span class="cov0" title="0">
+                        return fmt.Errorf("timeout waiting for cluster to be ready")</span>
+                case &lt;-ticker.C:<span class="cov0" title="0">
+                        var cluster map[string]interface{}
+                        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/nomad/cluster/%s", clusterId), &amp;cluster)
+                        if err != nil </span><span class="cov0" title="0">{
+                                continue</span>
+                        }
+
+                        <span class="cov0" title="0">if status, ok := cluster["status"].(string); ok &amp;&amp; status == "READY" </span><span class="cov0" title="0">{
+                                return nil
+                        }</span>
+                case &lt;-ctx.Done():<span class="cov0" title="0">
+                        return ctx.Err()</span>
+                }
+        }
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func resourcePackerTemplate() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Manages a Packer template on OVH infrastructure for image building",
+
+                CreateContext: resourcePackerTemplateCreate,
+                ReadContext:   resourcePackerTemplateRead,
+                UpdateContext: resourcePackerTemplateUpdate,
+                DeleteContext: resourcePackerTemplateDelete,
+
+                Importer: &amp;schema.ResourceImporter{
+                        StateContext: schema.ImportStatePassthroughContext,
+                },
+
+                Schema: map[string]*schema.Schema{
+                        "name": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "Name of the Packer template",
+                        },
+                        "region": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "OVH region for image building",
+                        },
+                        "source_image": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "Source image for building",
+                        },
+                        "instance_type": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "OVH instance type for building",
+                        },
+                        "builders": {
+                                Type:        schema.TypeList,
+                                Required:    true,
+                                Description: "Packer builders configuration",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "provisioners": {
+                                Type:        schema.TypeList,
+                                Optional:    true,
+                                Description: "Packer provisioners configuration",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "post_processors": {
+                                Type:        schema.TypeList,
+                                Optional:    true,
+                                Description: "Packer post-processors configuration",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "variables": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Template variables",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "auto_build": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable automatic builds on changes",
+                        },
+                        "build_timeout": {
+                                Type:         schema.TypeInt,
+                                Optional:     true,
+                                Default:      3600,
+                                Description:  "Build timeout in seconds",
+                                ValidateFunc: validation.IntBetween(300, 7200),
+                        },
+                        "web3_tools": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Include Web3 development tools",
+                        },
+                        "kata_support": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Include Kata containers support",
+                        },
+                        "tags": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Tags to apply to template resources",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "template_id": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Packer template ID",
+                        },
+                        "last_build_id": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Last successful build ID",
+                        },
+                        "image_id": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Generated image ID",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Template status",
+                        },
+                },
+        }
+}</span>
+
+func resourcePackerTemplateCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        templateConfig := map[string]interface{}{
+                "name":           d.Get("name").(string),
+                "region":         d.Get("region").(string),
+                "sourceImage":    d.Get("source_image").(string),
+                "instanceType":   d.Get("instance_type").(string),
+                "builders":       d.Get("builders").([]interface{}),
+                "provisioners":   d.Get("provisioners").([]interface{}),
+                "postProcessors": d.Get("post_processors").([]interface{}),
+                "variables":      d.Get("variables"),
+                "autoBuild":      d.Get("auto_build").(bool),
+                "buildTimeout":   d.Get("build_timeout").(int),
+                "web3Tools":      d.Get("web3_tools").(bool),
+                "kataSupport":    d.Get("kata_support").(bool),
+                "tags":           d.Get("tags"),
+        }
+
+        var result map[string]interface{}
+        err := config.OVHClient.Post("/cloud/project/packer/template", templateConfig, &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to create Packer template: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">templateId := result["id"].(string)
+        d.SetId(templateId)
+
+        return resourcePackerTemplateRead(ctx, d, meta)</span>
+}
+
+func resourcePackerTemplateRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        templateId := d.Id()
+
+        var template map[string]interface{}
+        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/packer/template/%s", templateId), &amp;template)
+        if err != nil </span><span class="cov0" title="0">{
+                d.SetId("")
+                return diag.FromErr(fmt.Errorf("failed to read Packer template: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.Set("name", template["name"])
+        d.Set("region", template["region"])
+        d.Set("source_image", template["sourceImage"])
+        d.Set("instance_type", template["instanceType"])
+        d.Set("builders", template["builders"])
+        d.Set("provisioners", template["provisioners"])
+        d.Set("post_processors", template["postProcessors"])
+        d.Set("variables", template["variables"])
+        d.Set("auto_build", template["autoBuild"])
+        d.Set("build_timeout", template["buildTimeout"])
+        d.Set("web3_tools", template["web3Tools"])
+        d.Set("kata_support", template["kataSupport"])
+        d.Set("template_id", template["templateId"])
+        d.Set("last_build_id", template["lastBuildId"])
+        d.Set("image_id", template["imageId"])
+        d.Set("status", template["status"])
+
+        if tags, ok := template["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("tags", tags)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func resourcePackerTemplateUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        templateId := d.Id()
+
+        if d.HasChanges("source_image", "builders", "provisioners", "post_processors", "variables", "auto_build", "build_timeout", "tags") </span><span class="cov0" title="0">{
+                updateConfig := map[string]interface{}{}
+
+                if d.HasChange("source_image") </span><span class="cov0" title="0">{
+                        updateConfig["sourceImage"] = d.Get("source_image").(string)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("builders") </span><span class="cov0" title="0">{
+                        updateConfig["builders"] = d.Get("builders").([]interface{})
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("provisioners") </span><span class="cov0" title="0">{
+                        updateConfig["provisioners"] = d.Get("provisioners").([]interface{})
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("post_processors") </span><span class="cov0" title="0">{
+                        updateConfig["postProcessors"] = d.Get("post_processors").([]interface{})
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("variables") </span><span class="cov0" title="0">{
+                        updateConfig["variables"] = d.Get("variables")
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("auto_build") </span><span class="cov0" title="0">{
+                        updateConfig["autoBuild"] = d.Get("auto_build").(bool)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("build_timeout") </span><span class="cov0" title="0">{
+                        updateConfig["buildTimeout"] = d.Get("build_timeout").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("tags") </span><span class="cov0" title="0">{
+                        updateConfig["tags"] = d.Get("tags")
+                }</span>
+
+                <span class="cov0" title="0">err := config.OVHClient.Put(fmt.Sprintf("/cloud/project/packer/template/%s", templateId), updateConfig, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("failed to update Packer template: %w", err))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return resourcePackerTemplateRead(ctx, d, meta)</span>
+}
+
+func resourcePackerTemplateDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        templateId := d.Id()
+
+        err := config.OVHClient.Delete(fmt.Sprintf("/cloud/project/packer/template/%s", templateId), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to delete Packer template: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.SetId("")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func resourceVaultCluster() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Manages a Vault cluster on OVH infrastructure with enterprise features",
+
+                CreateContext: resourceVaultClusterCreate,
+                ReadContext:   resourceVaultClusterRead,
+                UpdateContext: resourceVaultClusterUpdate,
+                DeleteContext: resourceVaultClusterDelete,
+
+                Importer: &amp;schema.ResourceImporter{
+                        StateContext: schema.ImportStatePassthroughContext,
+                },
+
+                Schema: map[string]*schema.Schema{
+                        "name": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "Name of the Vault cluster",
+                        },
+                        "region": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "OVH region for the cluster",
+                        },
+                        "node_count": {
+                                Type:         schema.TypeInt,
+                                Required:     true,
+                                Description:  "Number of Vault nodes",
+                                ValidateFunc: validation.IntBetween(1, 7),
+                        },
+                        "instance_type": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "OVH instance type for Vault nodes",
+                        },
+                        "storage_type": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Default:     "consul",
+                                Description: "Vault storage backend type",
+                                ValidateFunc: validation.StringInSlice([]string{
+                                        "consul", "raft", "etcd", "dynamodb",
+                                }, false),
+                        },
+                        "auto_unseal": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable auto-unseal with OVH KMS",
+                        },
+                        "audit_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable audit logging",
+                        },
+                        "performance_replication": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable performance replication",
+                        },
+                        "disaster_recovery": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable disaster recovery replication",
+                        },
+                        "web3_secrets": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Web3 secrets engine",
+                        },
+                        "kubernetes_auth": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Kubernetes authentication",
+                        },
+                        "tags": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Tags to apply to cluster resources",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "cluster_url": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Vault cluster URL",
+                        },
+                        "ui_url": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Vault UI URL",
+                        },
+                        "root_token": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Sensitive:   true,
+                                Description: "Initial root token",
+                        },
+                        "unseal_keys": {
+                                Type:        schema.TypeList,
+                                Computed:    true,
+                                Sensitive:   true,
+                                Description: "Unseal keys",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Cluster status",
+                        },
+                },
+        }
+}</span>
+
+func resourceVaultClusterCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterConfig := map[string]interface{}{
+                "name":                   d.Get("name").(string),
+                "region":                 d.Get("region").(string),
+                "nodeCount":              d.Get("node_count").(int),
+                "instanceType":           d.Get("instance_type").(string),
+                "storageType":            d.Get("storage_type").(string),
+                "autoUnseal":             d.Get("auto_unseal").(bool),
+                "auditEnabled":           d.Get("audit_enabled").(bool),
+                "performanceReplication": d.Get("performance_replication").(bool),
+                "disasterRecovery":       d.Get("disaster_recovery").(bool),
+                "web3Secrets":            d.Get("web3_secrets").(bool),
+                "kubernetesAuth":         d.Get("kubernetes_auth").(bool),
+                "tags":                   d.Get("tags"),
+        }
+
+        var result map[string]interface{}
+        err := config.OVHClient.Post("/cloud/project/vault/cluster", clusterConfig, &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to create Vault cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">clusterId := result["id"].(string)
+        d.SetId(clusterId)
+
+        return resourceVaultClusterRead(ctx, d, meta)</span>
+}
+
+func resourceVaultClusterRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        var cluster map[string]interface{}
+        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/vault/cluster/%s", clusterId), &amp;cluster)
+        if err != nil </span><span class="cov0" title="0">{
+                d.SetId("")
+                return diag.FromErr(fmt.Errorf("failed to read Vault cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.Set("name", cluster["name"])
+        d.Set("region", cluster["region"])
+        d.Set("node_count", cluster["nodeCount"])
+        d.Set("instance_type", cluster["instanceType"])
+        d.Set("storage_type", cluster["storageType"])
+        d.Set("auto_unseal", cluster["autoUnseal"])
+        d.Set("audit_enabled", cluster["auditEnabled"])
+        d.Set("performance_replication", cluster["performanceReplication"])
+        d.Set("disaster_recovery", cluster["disasterRecovery"])
+        d.Set("web3_secrets", cluster["web3Secrets"])
+        d.Set("kubernetes_auth", cluster["kubernetesAuth"])
+        d.Set("cluster_url", cluster["clusterUrl"])
+        d.Set("ui_url", cluster["uiUrl"])
+        d.Set("status", cluster["status"])
+
+        if rootToken, ok := cluster["rootToken"].(string); ok </span><span class="cov0" title="0">{
+                d.Set("root_token", rootToken)
+        }</span>
+
+        <span class="cov0" title="0">if unsealKeys, ok := cluster["unsealKeys"].([]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("unseal_keys", unsealKeys)
+        }</span>
+
+        <span class="cov0" title="0">if tags, ok := cluster["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("tags", tags)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func resourceVaultClusterUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        if d.HasChanges("node_count", "tags") </span><span class="cov0" title="0">{
+                updateConfig := map[string]interface{}{}
+
+                if d.HasChange("node_count") </span><span class="cov0" title="0">{
+                        updateConfig["nodeCount"] = d.Get("node_count").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("tags") </span><span class="cov0" title="0">{
+                        updateConfig["tags"] = d.Get("tags")
+                }</span>
+
+                <span class="cov0" title="0">err := config.OVHClient.Put(fmt.Sprintf("/cloud/project/vault/cluster/%s", clusterId), updateConfig, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("failed to update Vault cluster: %w", err))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return resourceVaultClusterRead(ctx, d, meta)</span>
+}
+
+func resourceVaultClusterDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        clusterId := d.Id()
+
+        err := config.OVHClient.Delete(fmt.Sprintf("/cloud/project/vault/cluster/%s", clusterId), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to delete Vault cluster: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.SetId("")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package provider
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+        "github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
+func resourceWaypointRunner() *schema.Resource <span class="cov0" title="0">{
+        return &amp;schema.Resource{
+                Description: "Manages a Waypoint runner on OVH infrastructure for application deployment",
+
+                CreateContext: resourceWaypointRunnerCreate,
+                ReadContext:   resourceWaypointRunnerRead,
+                UpdateContext: resourceWaypointRunnerUpdate,
+                DeleteContext: resourceWaypointRunnerDelete,
+
+                Importer: &amp;schema.ResourceImporter{
+                        StateContext: schema.ImportStatePassthroughContext,
+                },
+
+                Schema: map[string]*schema.Schema{
+                        "name": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "Name of the Waypoint runner",
+                        },
+                        "region": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                ForceNew:    true,
+                                Description: "OVH region for the runner",
+                        },
+                        "instance_type": {
+                                Type:        schema.TypeString,
+                                Required:    true,
+                                Description: "OVH instance type for the runner",
+                        },
+                        "runner_type": {
+                                Type:        schema.TypeString,
+                                Optional:    true,
+                                Default:     "static",
+                                Description: "Type of runner",
+                                ValidateFunc: validation.StringInSlice([]string{
+                                        "static", "on-demand", "kubernetes",
+                                }, false),
+                        },
+                        "capacity": {
+                                Type:         schema.TypeInt,
+                                Optional:     true,
+                                Default:      10,
+                                Description:  "Maximum concurrent jobs",
+                                ValidateFunc: validation.IntBetween(1, 100),
+                        },
+                        "docker_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     true,
+                                Description: "Enable Docker support",
+                        },
+                        "kubernetes_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Kubernetes support",
+                        },
+                        "nomad_enabled": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Nomad support",
+                        },
+                        "web3_deployments": {
+                                Type:        schema.TypeBool,
+                                Optional:    true,
+                                Default:     false,
+                                Description: "Enable Web3 application deployments",
+                        },
+                        "tags": {
+                                Type:        schema.TypeMap,
+                                Optional:    true,
+                                Description: "Tags to apply to runner resources",
+                                Elem: &amp;schema.Schema{
+                                        Type: schema.TypeString,
+                                },
+                        },
+                        "runner_id": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Waypoint runner ID",
+                        },
+                        "token": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Sensitive:   true,
+                                Description: "Runner authentication token",
+                        },
+                        "endpoint": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Runner endpoint URL",
+                        },
+                        "status": {
+                                Type:        schema.TypeString,
+                                Computed:    true,
+                                Description: "Runner status",
+                        },
+                },
+        }
+}</span>
+
+func resourceWaypointRunnerCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        runnerConfig := map[string]interface{}{
+                "name":              d.Get("name").(string),
+                "region":            d.Get("region").(string),
+                "instanceType":      d.Get("instance_type").(string),
+                "runnerType":        d.Get("runner_type").(string),
+                "capacity":          d.Get("capacity").(int),
+                "dockerEnabled":     d.Get("docker_enabled").(bool),
+                "kubernetesEnabled": d.Get("kubernetes_enabled").(bool),
+                "nomadEnabled":      d.Get("nomad_enabled").(bool),
+                "web3Deployments":   d.Get("web3_deployments").(bool),
+                "tags":              d.Get("tags"),
+        }
+
+        var result map[string]interface{}
+        err := config.OVHClient.Post("/cloud/project/waypoint/runner", runnerConfig, &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to create Waypoint runner: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">runnerId := result["id"].(string)
+        d.SetId(runnerId)
+
+        return resourceWaypointRunnerRead(ctx, d, meta)</span>
+}
+
+func resourceWaypointRunnerRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        runnerId := d.Id()
+
+        var runner map[string]interface{}
+        err := config.OVHClient.Get(fmt.Sprintf("/cloud/project/waypoint/runner/%s", runnerId), &amp;runner)
+        if err != nil </span><span class="cov0" title="0">{
+                d.SetId("")
+                return diag.FromErr(fmt.Errorf("failed to read Waypoint runner: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.Set("name", runner["name"])
+        d.Set("region", runner["region"])
+        d.Set("instance_type", runner["instanceType"])
+        d.Set("runner_type", runner["runnerType"])
+        d.Set("capacity", runner["capacity"])
+        d.Set("docker_enabled", runner["dockerEnabled"])
+        d.Set("kubernetes_enabled", runner["kubernetesEnabled"])
+        d.Set("nomad_enabled", runner["nomadEnabled"])
+        d.Set("web3_deployments", runner["web3Deployments"])
+        d.Set("runner_id", runner["runnerId"])
+        d.Set("token", runner["token"])
+        d.Set("endpoint", runner["endpoint"])
+        d.Set("status", runner["status"])
+
+        if tags, ok := runner["tags"].(map[string]interface{}); ok </span><span class="cov0" title="0">{
+                d.Set("tags", tags)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func resourceWaypointRunnerUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        runnerId := d.Id()
+
+        if d.HasChanges("capacity", "tags") </span><span class="cov0" title="0">{
+                updateConfig := map[string]interface{}{}
+
+                if d.HasChange("capacity") </span><span class="cov0" title="0">{
+                        updateConfig["capacity"] = d.Get("capacity").(int)
+                }</span>
+                <span class="cov0" title="0">if d.HasChange("tags") </span><span class="cov0" title="0">{
+                        updateConfig["tags"] = d.Get("tags")
+                }</span>
+
+                <span class="cov0" title="0">err := config.OVHClient.Put(fmt.Sprintf("/cloud/project/waypoint/runner/%s", runnerId), updateConfig, nil)
+                if err != nil </span><span class="cov0" title="0">{
+                        return diag.FromErr(fmt.Errorf("failed to update Waypoint runner: %w", err))
+                }</span>
+        }
+
+        <span class="cov0" title="0">return resourceWaypointRunnerRead(ctx, d, meta)</span>
+}
+
+func resourceWaypointRunnerDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics <span class="cov0" title="0">{
+        config := meta.(*Config)
+        _ = diag.Diagnostics{}
+
+        runnerId := d.Id()
+
+        err := config.OVHClient.Delete(fmt.Sprintf("/cloud/project/waypoint/runner/%s", runnerId), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return diag.FromErr(fmt.Errorf("failed to delete Waypoint runner: %w", err))
+        }</span>
+
+        <span class="cov0" title="0">d.SetId("")
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package provider
+
+import (
+        "crypto/rand"
+        "encoding/hex"
+        "fmt"
+        "net/http"
+        "net/http/httptest"
+        "os"
+        "regexp"
+        "strings"
+        "testing"
+        "time"
+
+        "github.com/hashicorp/terraform-plugin-testing/helper/resource"
+        "github.com/hashicorp/terraform-plugin-testing/terraform"
+)
+
+// TestAccProviderFactories contains the provider factory for acceptance tests
+var TestAccProviderFactories map[string]func() (interface{}, error)
+
+// Common test configuration constants
+const (
+        TestResourcePrefix = "tf-acc-test"
+        TestTagKey         = "terraform-test"
+        TestTagValue       = "true"
+        DefaultTestTimeout = 30 * time.Minute
+        DefaultTestRegion  = "eu-west-1"
+        DefaultTestZone    = "eu-west-1a"
+)
+
+// Test environment variables
+var (
+        TestOVHEndpoint       = os.Getenv("OVH_ENDPOINT")
+        TestOVHApplicationKey = os.Getenv("OVH_APPLICATION_KEY")
+        TestOVHSecret         = os.Getenv("OVH_APPLICATION_SECRET")
+        TestOVHConsumerKey    = os.Getenv("OVH_CONSUMER_KEY")
+        TestOVHProjectID      = os.Getenv("OVH_PROJECT_ID")
+)
+
+// TestConfig represents a test configuration
+type TestConfig struct {
+        ResourceName string
+        Region       string
+        Zone         string
+        Tags         map[string]string
+        Attributes   map[string]interface{}
+}
+
+// NewTestConfig creates a new test configuration with defaults
+func NewTestConfig(resourceName string) *TestConfig <span class="cov0" title="0">{
+        return &amp;TestConfig{
+                ResourceName: resourceName,
+                Region:       DefaultTestRegion,
+                Zone:         DefaultTestZone,
+                Tags: map[string]string{
+                        TestTagKey: TestTagValue,
+                        "Name":     resourceName,
+                },
+                Attributes: make(map[string]interface{}),
+        }
+}</span>
+
+// WithRegion sets the region for the test configuration
+func (tc *TestConfig) WithRegion(region string) *TestConfig <span class="cov0" title="0">{
+        tc.Region = region
+        return tc
+}</span>
+
+// WithZone sets the zone for the test configuration
+func (tc *TestConfig) WithZone(zone string) *TestConfig <span class="cov0" title="0">{
+        tc.Zone = zone
+        return tc
+}</span>
+
+// WithTag adds a tag to the test configuration
+func (tc *TestConfig) WithTag(key, value string) *TestConfig <span class="cov0" title="0">{
+        tc.Tags[key] = value
+        return tc
+}</span>
+
+// WithAttribute adds an attribute to the test configuration
+func (tc *TestConfig) WithAttribute(key string, value interface{}) *TestConfig <span class="cov0" title="0">{
+        tc.Attributes[key] = value
+        return tc
+}</span>
+
+// RandomName generates a random name with the given prefix
+func RandomName(prefix string) string <span class="cov0" title="0">{
+        bytes := make([]byte, 4)
+        rand.Read(bytes)
+        return fmt.Sprintf("%s-%s", prefix, hex.EncodeToString(bytes))
+}</span>
+
+// RandomNameWithTimestamp generates a random name with timestamp
+func RandomNameWithTimestamp(prefix string) string <span class="cov0" title="0">{
+        timestamp := time.Now().Unix()
+        bytes := make([]byte, 2)
+        rand.Read(bytes)
+        return fmt.Sprintf("%s-%d-%s", prefix, timestamp, hex.EncodeToString(bytes))
+}</span>
+
+// TestAccPreCheck verifies that required environment variables are set
+func TestAccPreCheck(t *testing.T) <span class="cov0" title="0">{
+        if TestOVHEndpoint == "" </span><span class="cov0" title="0">{
+                t.Fatal("OVH_ENDPOINT must be set for acceptance tests")
+        }</span>
+        <span class="cov0" title="0">if TestOVHApplicationKey == "" </span><span class="cov0" title="0">{
+                t.Fatal("OVH_APPLICATION_KEY must be set for acceptance tests")
+        }</span>
+        <span class="cov0" title="0">if TestOVHSecret == "" </span><span class="cov0" title="0">{
+                t.Fatal("OVH_APPLICATION_SECRET must be set for acceptance tests")
+        }</span>
+        <span class="cov0" title="0">if TestOVHConsumerKey == "" </span><span class="cov0" title="0">{
+                t.Fatal("OVH_CONSUMER_KEY must be set for acceptance tests")
+        }</span>
+        <span class="cov0" title="0">if TestOVHProjectID == "" </span><span class="cov0" title="0">{
+                t.Fatal("OVH_PROJECT_ID must be set for acceptance tests")
+        }</span>
+}
+
+// TestAccPreCheckOptional checks for optional environment variables
+func TestAccPreCheckOptional(t *testing.T, envVars ...string) <span class="cov0" title="0">{
+        for _, envVar := range envVars </span><span class="cov0" title="0">{
+                if os.Getenv(envVar) == "" </span><span class="cov0" title="0">{
+                        t.Skipf("Skipping test because %s is not set", envVar)
+                }</span>
+        }
+}
+
+// TestAccCheckResourceExists is a generic function to check if a resource exists
+func TestAccCheckResourceExists(resourceName string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return func(s *terraform.State) error </span><span class="cov0" title="0">{
+                rs, ok := s.RootModule().Resources[resourceName]
+                if !ok </span><span class="cov0" title="0">{
+                        return fmt.Errorf("resource not found: %s", resourceName)
+                }</span>
+
+                <span class="cov0" title="0">if rs.Primary.ID == "" </span><span class="cov0" title="0">{
+                        return fmt.Errorf("no ID is set for resource: %s", resourceName)
+                }</span>
+
+                <span class="cov0" title="0">return nil</span>
+        }
+}
+
+// TestAccCheckResourceDestroy is a generic function to check if a resource is destroyed
+func TestAccCheckResourceDestroy(resourceType string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return func(s *terraform.State) error </span><span class="cov0" title="0">{
+                for _, rs := range s.RootModule().Resources </span><span class="cov0" title="0">{
+                        if rs.Type != resourceType </span><span class="cov0" title="0">{
+                                continue</span>
+                        }
+
+                        <span class="cov0" title="0">if rs.Primary.ID != "" </span><span class="cov0" title="0">{
+                                return fmt.Errorf("resource %s still exists with ID: %s", resourceType, rs.Primary.ID)
+                        }</span>
+                }
+                <span class="cov0" title="0">return nil</span>
+        }
+}
+
+// TestAccCheckResourceDisappears simulates a resource disappearing outside of Terraform
+func TestAccCheckResourceDisappears(resourceName string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return func(s *terraform.State) error </span><span class="cov0" title="0">{
+                rs, ok := s.RootModule().Resources[resourceName]
+                if !ok </span><span class="cov0" title="0">{
+                        return fmt.Errorf("resource not found: %s", resourceName)
+                }</span>
+
+                <span class="cov0" title="0">if rs.Primary.ID == "" </span><span class="cov0" title="0">{
+                        return fmt.Errorf("no ID is set for resource: %s", resourceName)
+                }</span>
+
+                // In a real implementation, you would make an API call to delete the resource
+                // For testing purposes, we simulate the deletion
+                <span class="cov0" title="0">return nil</span>
+        }
+}
+
+// TestAccCheckResourceAttr checks a specific attribute value
+func TestAccCheckResourceAttr(resourceName, key, value string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return resource.TestCheckResourceAttr(resourceName, key, value)
+}</span>
+
+// TestAccCheckResourceAttrSet checks that an attribute is set (non-empty)
+func TestAccCheckResourceAttrSet(resourceName, key string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return resource.TestCheckResourceAttrSet(resourceName, key)
+}</span>
+
+// TestAccCheckResourceAttrPair checks that two resources have the same attribute value
+func TestAccCheckResourceAttrPair(nameFirst, keyFirst, nameSecond, keySecond string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return resource.TestCheckResourceAttrPair(nameFirst, keyFirst, nameSecond, keySecond)
+}</span>
+
+// TestAccCheckResourceAttrRegex checks that an attribute matches a regex pattern
+func TestAccCheckResourceAttrRegex(resourceName, key, pattern string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return resource.TestMatchResourceAttr(resourceName, key, regexp.MustCompile(pattern))
+}</span>
+
+// TestAccCheckResourceTags checks that a resource has the expected tags
+func TestAccCheckResourceTags(resourceName string, expectedTags map[string]string) resource.TestCheckFunc <span class="cov0" title="0">{
+        return func(s *terraform.State) error </span><span class="cov0" title="0">{
+                rs, ok := s.RootModule().Resources[resourceName]
+                if !ok </span><span class="cov0" title="0">{
+                        return fmt.Errorf("resource not found: %s", resourceName)
+                }</span>
+
+                <span class="cov0" title="0">for key, expectedValue := range expectedTags </span><span class="cov0" title="0">{
+                        tagKey := fmt.Sprintf("tags.%s", key)
+                        actualValue, ok := rs.Primary.Attributes[tagKey]
+                        if !ok </span><span class="cov0" title="0">{
+                                return fmt.Errorf("tag %s not found on resource %s", key, resourceName)
+                        }</span>
+                        <span class="cov0" title="0">if actualValue != expectedValue </span><span class="cov0" title="0">{
+                                return fmt.Errorf("tag %s has value %s, expected %s", key, actualValue, expectedValue)
+                        }</span>
+                }
+
+                <span class="cov0" title="0">return nil</span>
+        }
+}
+
+// MockHTTPServer creates a mock HTTP server for testing
+type MockHTTPServer struct {
+        *httptest.Server
+        Requests  []*http.Request
+        Responses []MockResponse
+}
+
+// MockResponse represents a mock HTTP response
+type MockResponse struct {
+        StatusCode int
+        Body       string
+        Headers    map[string]string
+}
+
+// NewMockHTTPServer creates a new mock HTTP server
+func NewMockHTTPServer() *MockHTTPServer <span class="cov0" title="0">{
+        mock := &amp;MockHTTPServer{
+                Requests:  make([]*http.Request, 0),
+                Responses: make([]MockResponse, 0),
+        }
+
+        mock.Server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                mock.Requests = append(mock.Requests, r)
+
+                if len(mock.Responses) &gt; 0 </span><span class="cov0" title="0">{
+                        response := mock.Responses[0]
+                        mock.Responses = mock.Responses[1:]
+
+                        for key, value := range response.Headers </span><span class="cov0" title="0">{
+                                w.Header().Set(key, value)
+                        }</span>
+                        <span class="cov0" title="0">w.WriteHeader(response.StatusCode)
+                        w.Write([]byte(response.Body))</span>
+                } else<span class="cov0" title="0"> {
+                        w.WriteHeader(http.StatusOK)
+                        w.Write([]byte("{}"))
+                }</span>
+        }))
+
+        <span class="cov0" title="0">return mock</span>
+}
+
+// AddResponse adds a mock response to the queue
+func (m *MockHTTPServer) AddResponse(statusCode int, body string, headers map[string]string) <span class="cov0" title="0">{
+        if headers == nil </span><span class="cov0" title="0">{
+                headers = make(map[string]string)
+        }</span>
+        <span class="cov0" title="0">headers["Content-Type"] = "application/json"
+
+        m.Responses = append(m.Responses, MockResponse{
+                StatusCode: statusCode,
+                Body:       body,
+                Headers:    headers,
+        })</span>
+}
+
+// GetRequestCount returns the number of requests received
+func (m *MockHTTPServer) GetRequestCount() int <span class="cov0" title="0">{
+        return len(m.Requests)
+}</span>
+
+// GetLastRequest returns the last request received
+func (m *MockHTTPServer) GetLastRequest() *http.Request <span class="cov0" title="0">{
+        if len(m.Requests) == 0 </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+        <span class="cov0" title="0">return m.Requests[len(m.Requests)-1]</span>
+}
+
+
+
+// TestProviderConfig generates a provider configuration for testing
+func TestProviderConfig() string <span class="cov0" title="0">{
+        return `
+provider "hashicorp-ovh" {
+  ovh_endpoint           = "` + TestOVHEndpoint + `"
+  ovh_application_key    = "` + TestOVHApplicationKey + `"
+  ovh_application_secret = "` + TestOVHSecret + `"
+  ovh_consumer_key       = "` + TestOVHConsumerKey + `"
+  ovh_project_id         = "` + TestOVHProjectID + `"
+}`
+}</span>
+
+// TestNomadClusterConfig generates a basic Nomad cluster configuration
+func TestNomadClusterConfig(name string) string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+resource "hashicorp_ovh_nomad_cluster" "test" {
+  name         = "%s"
+  region       = "%s"
+  server_count = 3
+  client_count = 5
+
+  tags = {
+    %s = "%s"
+    Environment = "test"
+  }
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}</span>
+
+// TestVaultClusterConfig generates a basic Vault cluster configuration
+func TestVaultClusterConfig(name string) string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+resource "hashicorp_ovh_vault_cluster" "test" {
+  name       = "%s"
+  region     = "%s"
+  node_count = 3
+
+  auto_unseal_enabled = true
+  ha_enabled         = true
+
+  tags = {
+    %s = "%s"
+    Environment = "test"
+  }
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}</span>
+
+// TestConsulClusterConfig generates a basic Consul cluster configuration
+func TestConsulClusterConfig(name string) string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+resource "hashicorp_ovh_consul_cluster" "test" {
+  name       = "%s"
+  region     = "%s"
+  node_count = 3
+
+  connect_enabled    = true
+  encryption_enabled = true
+
+  tags = {
+    %s = "%s"
+    Environment = "test"
+  }
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}</span>
+
+// TestBoundaryClusterConfig generates a basic Boundary cluster configuration
+func TestBoundaryClusterConfig(name string) string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+resource "hashicorp_ovh_boundary_cluster" "test" {
+  name             = "%s"
+  region           = "%s"
+  controller_count = 1
+  worker_count     = 2
+
+  tags = {
+    %s = "%s"
+    Environment = "test"
+  }
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}</span>
+
+// TestWaypointRunnerConfig generates a basic Waypoint runner configuration
+func TestWaypointRunnerConfig(name string) string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+resource "hashicorp_ovh_waypoint_runner" "test" {
+  name   = "%s"
+  region = "%s"
+
+  runner_type = "static"
+
+  tags = {
+    %s = "%s"
+    Environment = "test"
+  }
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}</span>
+
+// TestPackerTemplateConfig generates a basic Packer template configuration
+func TestPackerTemplateConfig(name string) string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+resource "hashicorp_ovh_packer_template" "test" {
+  name   = "%s"
+  region = "%s"
+
+  source_image = "ubuntu-20.04"
+  image_type   = "standard"
+
+  tags = {
+    %s = "%s"
+    Environment = "test"
+  }
+}`, TestProviderConfig(), name, DefaultTestRegion, TestTagKey, TestTagValue)
+}</span>
+
+// TestDataSourceConfig generates configurations for data source testing
+func TestDataSourceNomadClustersConfig() string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+data "hashicorp_ovh_nomad_clusters" "test" {}
+`, TestProviderConfig())
+}</span>
+
+func TestDataSourceVaultClustersConfig() string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+data "hashicorp_ovh_vault_clusters" "test" {}
+`, TestProviderConfig())
+}</span>
+
+func TestDataSourceConsulClustersConfig() string <span class="cov0" title="0">{
+        return fmt.Sprintf(`
+%s
+
+data "hashicorp_ovh_consul_clusters" "test" {}
+`, TestProviderConfig())
+}</span>
+
+// ValidationHelper provides common validation functions
+type ValidationHelper struct {
+        t *testing.T
+}
+
+// NewValidationHelper creates a new validation helper
+func NewValidationHelper(t *testing.T) *ValidationHelper <span class="cov0" title="0">{
+        return &amp;ValidationHelper{t: t}
+}</span>
+
+// ValidateResourceName checks if a resource name is valid
+func (vh *ValidationHelper) ValidateResourceName(name string) error <span class="cov0" title="0">{
+        if len(name) &lt; 3 || len(name) &gt; 50 </span><span class="cov0" title="0">{
+                return fmt.Errorf("resource name must be between 3 and 50 characters")
+        }</span>
+
+        <span class="cov0" title="0">matched, err := regexp.MatchString("^[a-zA-Z][a-zA-Z0-9-]*$", name)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">if !matched </span><span class="cov0" title="0">{
+                return fmt.Errorf("resource name must start with a letter and contain only letters, numbers, and hyphens")
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// ValidateRegion checks if a region is valid
+func (vh *ValidationHelper) ValidateRegion(region string) error <span class="cov0" title="0">{
+        validRegions := []string{
+                "eu-west-1", "eu-central-1", "us-east-1", "us-west-1",
+                "ap-southeast-1", "ap-northeast-1",
+        }
+
+        for _, validRegion := range validRegions </span><span class="cov0" title="0">{
+                if region == validRegion </span><span class="cov0" title="0">{
+                        return nil
+                }</span>
+        }
+
+        <span class="cov0" title="0">return fmt.Errorf("invalid region: %s", region)</span>
+}
+
+// ValidateTags checks if tags are valid
+func (vh *ValidationHelper) ValidateTags(tags map[string]string) error <span class="cov0" title="0">{
+        if len(tags) &gt; 50 </span><span class="cov0" title="0">{
+                return fmt.Errorf("cannot have more than 50 tags")
+        }</span>
+
+        <span class="cov0" title="0">for key, value := range tags </span><span class="cov0" title="0">{
+                if len(key) == 0 || len(key) &gt; 128 </span><span class="cov0" title="0">{
+                        return fmt.Errorf("tag key must be between 1 and 128 characters")
+                }</span>
+                <span class="cov0" title="0">if len(value) &gt; 256 </span><span class="cov0" title="0">{
+                        return fmt.Errorf("tag value must be 256 characters or less")
+                }</span>
+                <span class="cov0" title="0">if strings.HasPrefix(key, "aws:") || strings.HasPrefix(key, "ovh:") </span><span class="cov0" title="0">{
+                        return fmt.Errorf("tag key cannot start with 'aws:' or 'ovh:'")
+                }</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// TestCleanup provides utilities for cleaning up test resources
+type TestCleanup struct {
+        resources []string
+        t         *testing.T
+}
+
+// NewTestCleanup creates a new test cleanup helper
+func NewTestCleanup(t *testing.T) *TestCleanup <span class="cov0" title="0">{
+        return &amp;TestCleanup{
+                resources: make([]string, 0),
+                t:         t,
+        }
+}</span>
+
+// AddResource adds a resource to be cleaned up
+func (tc *TestCleanup) AddResource(resourceID string) <span class="cov0" title="0">{
+        tc.resources = append(tc.resources, resourceID)
+}</span>
+
+// Cleanup cleans up all registered resources
+func (tc *TestCleanup) Cleanup() <span class="cov0" title="0">{
+        for _, resourceID := range tc.resources </span><span class="cov0" title="0">{
+                // In a real implementation, you would make API calls to delete the resources
+                tc.t.Logf("Cleaning up resource: %s", resourceID)
+        }</span>
+}
+
+// TestMetrics provides utilities for collecting test metrics
+type TestMetrics struct {
+        StartTime time.Time
+        EndTime   time.Time
+        APICall   int
+        Errors    []error
+}
+
+// NewTestMetrics creates a new test metrics collector
+func NewTestMetrics() *TestMetrics <span class="cov0" title="0">{
+        return &amp;TestMetrics{
+                StartTime: time.Now(),
+                APICall:   0,
+                Errors:    make([]error, 0),
+        }
+}</span>
+
+// RecordAPICall increments the API call counter
+func (tm *TestMetrics) RecordAPICall() <span class="cov0" title="0">{
+        tm.APICall++
+}</span>
+
+// RecordError adds an error to the metrics
+func (tm *TestMetrics) RecordError(err error) <span class="cov0" title="0">{
+        tm.Errors = append(tm.Errors, err)
+}</span>
+
+// Finish marks the end of the test and calculates duration
+func (tm *TestMetrics) Finish() <span class="cov0" title="0">{
+        tm.EndTime = time.Now()
+}</span>
+
+// Duration returns the test duration
+func (tm *TestMetrics) Duration() time.Duration <span class="cov0" title="0">{
+        if tm.EndTime.IsZero() </span><span class="cov0" title="0">{
+                return time.Since(tm.StartTime)
+        }</span>
+        <span class="cov0" title="0">return tm.EndTime.Sub(tm.StartTime)</span>
+}
+
+// Summary returns a summary of the test metrics
+func (tm *TestMetrics) Summary() string <span class="cov0" title="0">{
+        return fmt.Sprintf("Duration: %v, API Calls: %d, Errors: %d",
+                tm.Duration(), tm.APICall, len(tm.Errors))
+}</span>
+
+// LoadTestData loads test data from files or environment
+func LoadTestData(key string, defaultValue string) string <span class="cov0" title="0">{
+        if value := os.Getenv(fmt.Sprintf("TEST_%s", key)); value != "" </span><span class="cov0" title="0">{
+                return value
+        }</span>
+        <span class="cov0" title="0">return defaultValue</span>
+}
+
+// SkipCI skips tests when running in CI environment
+func SkipCI(t *testing.T, reason string) <span class="cov0" title="0">{
+        if os.Getenv("CI") == "true" </span><span class="cov0" title="0">{
+                t.Skipf("Skipping in CI: %s", reason)
+        }</span>
+}
+
+// RequireEnv fails the test if required environment variables are not set
+func RequireEnv(t *testing.T, envVars ...string) <span class="cov0" title="0">{
+        for _, envVar := range envVars </span><span class="cov0" title="0">{
+                if os.Getenv(envVar) == "" </span><span class="cov0" title="0">{
+                        t.Fatalf("Required environment variable %s is not set", envVar)
+                }</span>
+        }
+}
+
+// TestTimeout returns the timeout for long-running tests
+func TestTimeout() time.Duration <span class="cov0" title="0">{
+        if timeout := os.Getenv("TEST_TIMEOUT"); timeout != "" </span><span class="cov0" title="0">{
+                if d, err := time.ParseDuration(timeout); err == nil </span><span class="cov0" title="0">{
+                        return d
+                }</span>
+        }
+        <span class="cov0" title="0">return DefaultTestTimeout</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package main
+
+import (
+        "context"
+        "flag"
+        "log"
+
+        "github.com/hashicorp/terraform-plugin-framework/providerserver"
+        "github.com/swcstudio/terraform-provider-hashicorp-ovh/internal/provider"
+)
+
+var (
+        version string = "dev"
+        commit  string = ""
+)
+
+func main() <span class="cov0" title="0">{
+        var debug bool
+
+        flag.BoolVar(&amp;debug, "debug", false, "set to true to run the provider with support for debuggers like delve")
+        flag.Parse()
+
+        opts := providerserver.ServeOpts{
+                Address: "registry.terraform.io/swcstudio/hashicorp-ovh",
+                Debug:   debug,
+        }
+
+        err := providerserver.Serve(context.Background(), provider.New(version), opts)
+
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal(err.Error())
+        }</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

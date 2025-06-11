@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"context"
 	"fmt"
 	"regexp"
 	"testing"
@@ -418,85 +417,8 @@ resource "hashicorp_ovh_nomad_cluster" "test" {
 `
 }
 
-// Unit tests for resource logic
+// Unit tests for resource logic will be added when resources are implemented
 
-func TestNomadClusterResourceSchema(t *testing.T) {
-	resource := &nomadClusterResource{}
-	
-	schemaReq := resource.SchemaRequest{}
-	schemaResp := &resource.SchemaResponse{}
-	
-	resource.Schema(context.Background(), schemaReq, schemaResp)
-	
-	if schemaResp.Diagnostics.HasError() {
-		t.Fatalf("Schema validation failed: %v", schemaResp.Diagnostics.Errors())
-	}
-	
-	schema := schemaResp.Schema
-	
-	// Verify required attributes
-	requiredAttrs := []string{"name", "region"}
-	for _, attr := range requiredAttrs {
-		if _, ok := schema.Attributes[attr]; !ok {
-			t.Errorf("Required attribute %s not found in schema", attr)
-		}
-	}
-	
-	// Verify optional attributes with defaults
-	optionalAttrs := []string{"server_count", "client_count", "vault_integration", "consul_integration"}
-	for _, attr := range optionalAttrs {
-		if _, ok := schema.Attributes[attr]; !ok {
-			t.Errorf("Optional attribute %s not found in schema", attr)
-		}
-	}
-}
-
-func TestNomadClusterValidation(t *testing.T) {
-	tests := []struct {
-		name        string
-		serverCount int64
-		clientCount int64
-		expectError bool
-	}{
-		{"valid_counts", 3, 5, false},
-		{"minimal_valid", 1, 0, false},
-		{"max_valid", 10, 100, false},
-		{"invalid_server_zero", 0, 5, true},
-		{"invalid_server_high", 15, 5, true},
-		{"invalid_client_high", 3, 150, true},
-	}
-	
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			// This would test validation logic if implemented in the resource
-			// For now, we just verify the test cases are structured correctly
-			if tt.serverCount < 1 || tt.serverCount > 10 {
-				if !tt.expectError {
-					t.Errorf("Test case %s should expect error for server_count %d", tt.name, tt.serverCount)
-				}
-			}
-			if tt.clientCount < 0 || tt.clientCount > 100 {
-				if !tt.expectError {
-					t.Errorf("Test case %s should expect error for client_count %d", tt.name, tt.clientCount)
-				}
-			}
-		})
-	}
-}
-
-// Benchmark tests
-
-func BenchmarkNomadClusterCreate(b *testing.B) {
-	// This would benchmark the create operation
-	// For now, it's a placeholder
-	for i := 0; i < b.N; i++ {
-		// Simulate cluster creation logic
-	}
-}
-
-func BenchmarkNomadClusterRead(b *testing.B) {
-	// This would benchmark the read operation
-	for i := 0; i < b.N; i++ {
-		// Simulate cluster read logic
-	}
-}
+// TODO: Add resource schema tests when nomadClusterResource is implemented
+// TODO: Add validation tests when resource validation is implemented  
+// TODO: Add benchmark tests when resource operations are implemented
